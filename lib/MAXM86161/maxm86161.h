@@ -17,7 +17,10 @@
 
 class MAXM86161 {
     public:
-    MAXM86161(
+    MAXM86161();
+    ~MAXM86161();
+
+    bool begin(
         int interrupt, 
         int gpio, 
         TwoWire &wirePort = Wire, 
@@ -25,22 +28,22 @@ class MAXM86161 {
         uint8_t i2c_addr = MAXM86161_ADDRESS);
     
     // Functions for I2C reading and writing
-    int read_from_reg(int address);
-    int data_from_reg(int address, int&value);
-    int write_to_reg(int address, int value);
+    bool read_from_reg(int address);
+    bool data_from_reg(int address, int&value);
+    bool write_to_reg(int address, int value);
 
     // Sensor initialization
-    int start_sensor(void);
+    bool start_sensor(void);
 
     // Reading data from the sensor
-    int start_temp_read();
-    int get_package_temp(float &temp_value);
+    bool start_temp_read();
+    bool get_package_temp(float &temp_value);
 
     // Sensor settings
-    int set_i2c_speed();
-    int set_led_current();
-    int read_led_current();
-    int set_data_rate();
+    bool set_i2c_speed();
+    bool set_led_current();
+    bool read_led_current();
+    bool set_data_rate();
 
     private:
     int _two_comp_to_dec(int two_comp);
