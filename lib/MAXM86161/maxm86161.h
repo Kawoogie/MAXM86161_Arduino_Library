@@ -41,7 +41,6 @@ class MAXM86161 {
     bool get_package_temp(float &temp_value);
 
     // Sensor settings
-    bool set_i2c_speed();
     bool set_led_current();
     bool read_led_current();
     bool set_data_rate();
@@ -55,6 +54,8 @@ class MAXM86161 {
     bool shutdown();
     bool clear_interrupt();
     bool enable_low_power_mode();
+    bool set_i2c_speed_low(uint32_t i2cSpeed = I2C_SPEED_STANDARD);
+    bool set_i2c_speed_high(uint32_t i2cSpeed = I2C_SPEED_FAST);
 
     private:
     int _two_comp_to_dec(int two_comp);
