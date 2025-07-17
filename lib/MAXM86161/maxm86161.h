@@ -37,6 +37,7 @@ class MAXM86161 {
 
     // Reading data from the sensor
     bool start_temp_read();
+    bool samples_to_read();
     bool get_package_temp(float &temp_value);
 
     // Sensor settings
@@ -44,6 +45,16 @@ class MAXM86161 {
     bool set_led_current();
     bool read_led_current();
     bool set_data_rate();
+
+    bool set_integration_time();
+    bool set_photodiode_bias();
+    bool set_led_driver_range();
+
+    // Sensor Operations
+    bool reset();
+    bool shutdown();
+    bool clear_interrupt();
+    bool enable_low_power_mode();
 
     private:
     int _two_comp_to_dec(int two_comp);
