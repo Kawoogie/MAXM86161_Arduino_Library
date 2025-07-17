@@ -10,12 +10,11 @@
 #include "maxm86161.h"
 
 
+
 // Masks and shift value for getting value out of FIFO data.
 #define MAXM86161_REG_FIFO_DATA_MASK  0x7FFFF
 #define MAXM86161_REG_FIFO_RES        19
 #define MAXM86161_REG_FIFO_TAG_MASK   0x1F
 
 
-MAXM86161::MAXM86161(int sda, int scl, int interrupt, int gpio)
-{
-}
+

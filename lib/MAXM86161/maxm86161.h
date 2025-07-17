@@ -6,20 +6,43 @@
 
 #include "Arduino.h"
 
+#include <Wire.h>
+
+
+#define MAXM86161_ADDRESS   0x62  //7-bit address
+
+#define I2C_SPEED_STANDARD        100000
+#define I2C_SPEED_FAST            400000
+
 
 class MAXM86161 {
     public:
-    MAXM86161(int sda, int scl, int interrupt, int gpio);
+    MAXM86161(
+        int interrupt, 
+        int gpio, 
+        TwoWire &wirePort = Wire, 
+        uint32_t i2cSpeed = I2C_SPEED_FAST, 
+        uint8_t i2c_addr = MAXM86161_ADDRESS);
+    
+    // Functions for I2C reading and writing
     int read_from_reg(int address);
     int data_from_reg(int address, int&value);
     int write_to_reg(int address, int value);
+
+    // Sensor initialization
     int start_sensor(void);
+
+    // Reading data from the sensor
     int start_temp_read();
     int get_package_temp(float &temp_value);
 
+    // Sensor settings
+    int set_i2c_speed();
+    int set_led_current();
+    int read_led_current();
+    int set_data_rate();
+
     private:
-    int _sda;
-    int _scl;
     int _two_comp_to_dec(int two_comp);
     float _temperature_cal(float &temp_value);
 
