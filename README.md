@@ -28,7 +28,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">Library to run the MAXM86161 with an Arduino.</h3>
+<h3 align="center">MAXM86161 Arduino Library.</h3>
 
   <p align="center">
     This library runs the MAXM86161 optical sensor using an Arduino. The MAXM86161 is used for pulse oximetry.
