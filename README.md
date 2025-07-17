@@ -90,16 +90,17 @@ To use this library, include the `maxm86161.h` and `maxm86161.cpp` files in your
 
 ### Prerequisites
 This code is tested on an Arduino Nano 33 BLE Sense Rev 2
-   ```
+  
 
 ### Installation
 This code can be imported to
 .
 
-   ```
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+  
 
 
 <!-- USAGE EXAMPLES -->
@@ -107,7 +108,7 @@ This code can be imported to
 Here's an example of how to use the MAXM86161 library to get raw optical data using the chip’s built in interrupts. 
 ### Example 
 ```cpp #include "mbed.h" #include "DebounceIntrptLib.h" // LED to indicate the state DigitalOut led(LED1); // Function to toggle the LED void toggle_led() { led = !led; } // Create debounce instance for P5_7 with a debounce time of 50 ms DebounceLib debounce(P5_7, 50, toggle_led); int main() { // Initially turn off the LED led = 0; // Main loop does nothing, as all work is done in interrupts while (true) { ThisThread::sleep_for(1000ms); // Sleep to reduce CPU usage } }
-
+```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
