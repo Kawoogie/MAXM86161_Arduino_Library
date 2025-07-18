@@ -9,10 +9,10 @@
 #include <Wire.h>
 
 
-#define MAXM86161_ADDRESS   0x62  //7-bit address
+#define MAXM86161_ADDRESS             0x62  //7-bit address
 
-#define I2C_SPEED_STANDARD        100000
-#define I2C_SPEED_FAST            400000
+#define I2C_SPEED_STANDARD            100000
+#define I2C_SPEED_FAST                400000
 
 
 // Masks and shift value for getting value out of FIFO data.
