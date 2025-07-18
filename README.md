@@ -86,7 +86,11 @@ This library is written to drive the MAXM86161 pulse oximeter sensor with an Ard
 <!-- GETTING STARTED -->
 ## Getting Started
 
+The sensor's manufacture website: https://www.analog.com/en/products/maxm86161.html
+
 To use this library, include the `maxm86161.h` and `maxm86161.cpp` files in your Arduino project. This is easiest done importing as a library.
+
+
 
 ### Prerequisites
 This code is tested on an Arduino Nano 33 BLE Sense Rev 2
