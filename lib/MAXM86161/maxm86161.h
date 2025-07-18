@@ -17,7 +17,7 @@
 
 class MAXM86161 {
     public:
-    MAXM86161();
+    MAXM86161(void);
     ~MAXM86161();
 
     bool begin(
