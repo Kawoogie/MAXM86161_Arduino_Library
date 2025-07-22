@@ -24,12 +24,12 @@
 class MAXM86161 {
     public:
     MAXM86161(void);
-    ~MAXM86161();
+    ~MAXM86161(void);
 
     bool begin(
         int interrupt, 
         int gpio, 
-        TwoWire &wirePort = Wire, 
+        TwoWire *wirePort = Wire, 
         uint32_t i2cSpeed = I2C_SPEED_FAST, 
         uint8_t i2c_addr = MAXM86161_ADDRESS);
     

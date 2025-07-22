@@ -24,7 +24,7 @@ MAXM86161::MAXM86161(void)
  * @brief Destroy the MAXM86161::MAXM86161 object
  *
  */
-MAXM86161::~MAXM86161()
+MAXM86161::~MAXM86161(void)
 {
 }
 
@@ -42,7 +42,7 @@ MAXM86161::~MAXM86161()
  *            The I2C address to be used.
  *    @return True if initialization was successful, otherwise false.
  */
-bool MAXM86161::begin(int interrupt, int gpio, TwoWire &wirePort, uint32_t i2cSpeed, uint8_t i2c_addr)
+bool MAXM86161::begin(int interrupt, int gpio, TwoWire *wirePort, uint32_t i2cSpeed, uint8_t i2c_addr)
 {
     return false;
 }
