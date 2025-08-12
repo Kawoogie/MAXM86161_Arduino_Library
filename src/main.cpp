@@ -3,6 +3,9 @@
 
 #include <Wire.h>
 
+
+#define i2c_address 0x62
+
 // the setup function runs once when you press reset or power the board
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
@@ -23,55 +26,29 @@ void setup() {
 void loop() {
 
 
-byte error, address;
+  byte error, address;
   int nDevices;
+  bool found;
 
   Serial.println("Scanning...");
 
 
-  //TODO: Modify this code to look for the sensors by address
-  // MAXM86161 : 0x62 or 98 decimal.
 
-  nDevices = 0;
-  for(address = 1; address < 127; address++ ) 
-  {
-    // The i2c_scanner uses the return value of
-    // the Write.endTransmisstion to see if
-    // a device did acknowledge to the address.
-    Wire.beginTransmission(address);
-    error = Wire.endTransmission();
+  Wire.beginTransmission(i2c_address);
+  error = Wire.endTransmission();
 
-    // Serial.print("Address 0x");
-    // Serial.print(address, HEX);
-    // Serial.print(" response: ");
-    // Serial.println(error);
-
-
-
-    if (error == 0)
-    {
-      Serial.print("I2C device found at address 0x");
-      if (address<16) 
-        Serial.print("0");
-      Serial.print(address,HEX);
-      Serial.print("  Bit Shifted: 0x");
-      Serial.print(address << 1, HEX);
-      Serial.println("!");
-
-      nDevices++;
-    }
-    else if (error==4) 
-    {
-      Serial.print("Unknown error at address 0x");
-      if (address<16) 
-        Serial.print("0");
-      Serial.println(address,HEX);
-    }    
+  if (error){
+    Serial.println("MAXM86161 Detected!")
   }
-  if (nDevices == 0)
-    Serial.println("No I2C devices found\n");
-  else
-    Serial.println("done\n");
+
+  else {
+    Serial.println("Not Detected :(")
+  }
+
+
+
+
+
 
   delay(3000);           // wait 3 seconds for next scan
 
