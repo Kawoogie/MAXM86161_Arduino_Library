@@ -5,14 +5,20 @@
 #define maxm86161_h
 
 #include "Arduino.h"
-
+#include <Adafruit_I2CDevice.h>
 #include <Wire.h>
 
 
 #define MAXM86161_ADDRESS             0x62  //7-bit address
+#define MAXM86161_ID                  0x01  // Part ID value
 
 #define I2C_SPEED_STANDARD            100000
 #define I2C_SPEED_FAST                400000
+
+
+// Registers
+
+#define MAXM86161_PART_ID             0xFF  // Registery of the part ID
 
 
 // Masks and shift value for getting value out of FIFO data.
@@ -29,9 +35,10 @@ class MAXM86161 {
     bool begin(
         int interrupt, 
         int gpio, 
-        TwoWire *wirePort = Wire, 
+        TwoWire *wire = &Wire, 
         uint32_t i2cSpeed = I2C_SPEED_FAST, 
-        uint8_t i2c_addr = MAXM86161_ADDRESS);
+        uint8_t i2c_addr = MAXM86161_ADDRESS,
+        uint32_t device_id = MAXM86161_ID);
     
     // Functions for I2C reading and writing
     bool read_from_reg(int address);
@@ -64,6 +71,11 @@ class MAXM86161 {
     bool set_i2c_speed_high(uint32_t i2cSpeed = I2C_SPEED_FAST);
 
     private:
+    int _interrupt;
+    int _gpio;
+    Adafruit_I2CDevice *i2c_dev = NULL; ///< Pointer to the I2C bus interface
+    bool _init(uint32_t id);
+
     int _two_comp_to_dec(int two_comp);
     float _temperature_cal(float &temp_value);
 

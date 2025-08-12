@@ -38,11 +38,11 @@ void loop() {
   error = Wire.endTransmission();
 
   if (error){
-    Serial.println("MAXM86161 Detected!")
+    Serial.println("MAXM86161 Detected!");
   }
 
   else {
-    Serial.println("Not Detected :(")
+    Serial.println("Not Detected :(");
   }
 
 
