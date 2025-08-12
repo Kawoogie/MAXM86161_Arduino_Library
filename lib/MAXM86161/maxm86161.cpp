@@ -99,10 +99,10 @@ bool MAXM86161::write_to_reg(int address, int value)
 bool MAXM86161::_init(uint32_t id)
 {
     bool error;
-    uint8_t buffer[1];
+    uint8_t buffer[8];
 
     // Read the part ID from the device
-    error = data_from_reg(MAXM86161_PART_ID, buffer);
+    error = data_from_reg(MAXM86161_PART_ID, *buffer);
     if (!error){
         return false;
     }
