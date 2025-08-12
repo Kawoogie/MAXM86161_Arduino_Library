@@ -108,7 +108,7 @@ bool MAXM86161::_init(uint32_t id)
     }
 
     // Check if the part ID is correct
-    if (buffer[0] = MAXM86161_ID){
+    if (buffer[0] == MAXM86161_ID){
         return true;
     }
     else {

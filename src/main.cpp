@@ -31,6 +31,9 @@ void loop() {
   // Define the MAXM86161 device
   error = sensor.begin(2, 3);
   
+  Serial.print("Initialization Variable: ");
+  Serial.println(error);
+
   if (error){
     Serial.println("MAXM86161 initialized!");
   }
@@ -66,7 +69,7 @@ void loop() {
   }
   
   Serial.println();
-  
+
   delay(3000);           // wait 3 seconds for next scan
 
   // digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
