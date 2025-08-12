@@ -54,14 +54,14 @@ bool MAXM86161::begin(int interrupt, int gpio, TwoWire *wire, uint32_t i2cSpeed,
     }
 
     // Define a new I2C device
-    i2c_dev = new Adafruit_I2CDevice(i2c_address, wire);
+    i2c_dev = new Adafruit_I2CDevice(i2c_addr, wire);
 
     // Start the device and return a fault if it doesn't start
     if (!i2c_dev->begin()) {
         return false;
     }
 
-    i2c_dev.setSpeed(i2cSpeed);
+    i2c_dev->setSpeed(i2cSpeed);
 
     bool isInit;
     isInit = _init(device_id);
