@@ -28,6 +28,10 @@ byte error, address;
 
   Serial.println("Scanning...");
 
+
+  //TODO: Modify this code to look for the sensors by address
+  // MAXM86161 : 0x62 or 98 decimal.
+
   nDevices = 0;
   for(address = 1; address < 127; address++ ) 
   {

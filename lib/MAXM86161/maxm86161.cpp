@@ -5,8 +5,8 @@
     Released into the public domain.
 */
 
-
 #include "Arduino.h"
+#include <Wire.h>
 #include "maxm86161.h"
 
 
@@ -42,7 +42,60 @@ MAXM86161::~MAXM86161(void)
  *            The I2C address to be used.
  *    @return True if initialization was successful, otherwise false.
  */
-bool MAXM86161::begin(int interrupt, int gpio, TwoWire *wirePort, uint32_t i2cSpeed, uint8_t i2c_addr)
+bool MAXM86161::begin(int interrupt, int gpio, TwoWire *wire, uint32_t i2cSpeed, uint8_t i2c_addr, uint32_t device_id)
 {
+    // Save the pin values for the interrupt and gpio
+    _interrupt = interrupt;
+    _gpio = gpio;
+    
+    // Check if a device is defined and remove it
+    if (i2c_dev) {
+        delete i2c_dev; // remove old interface
+    }
+
+    // Define a new I2C device
+    i2c_dev = new Adafruit_I2CDevice(i2c_address, wire);
+
+    // Start the device and return a fault if it doesn't start
+    if (!i2c_dev->begin()) {
+        return false;
+    }
+
+    i2c_dev.setSpeed(i2cSpeed);
+
+    bool isInit;
+    isInit = _init(device_id);
+    return isInit;
+}
+
+bool MAXM86161::read_from_reg(int address)
+{
+    
+    return false;
+}
+
+bool MAXM86161::data_from_reg(int address, int &value)
+{
+    return false;
+}
+
+bool MAXM86161::write_to_reg(int address, int value)
+{
+    return false;
+}
+
+/*!  @brief Initializer for post i2c/spi init
+ *   @param id ID for the sensor
+ *   @returns True if chip identified and initialized
+ */
+bool MAXM86161::_init(uint32_t id)
+{
+    bool error;
+    uint8_t buffer[1];
+    // error = i2c_dev.read()
+    if (!error){
+        return false;
+    }
+
     return false;
 }
