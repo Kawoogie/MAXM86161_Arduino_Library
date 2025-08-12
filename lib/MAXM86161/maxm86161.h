@@ -41,8 +41,8 @@ class MAXM86161 {
         uint32_t device_id = MAXM86161_ID);
     
     // Functions for I2C reading and writing
-    bool read_from_reg(int address);
-    bool data_from_reg(int address, int&value);
+    // bool read_from_reg(int address);
+    bool data_from_reg(int address, uint8_t &value);
     bool write_to_reg(int address, int value);
 
     // Sensor initialization

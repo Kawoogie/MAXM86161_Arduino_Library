@@ -4,7 +4,11 @@
 #include <Wire.h>
 
 
-#define i2c_address 0x62
+#define i2c_address 92
+
+
+  
+MAXM86161 sensor;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -16,23 +20,26 @@ void setup() {
 
   // Start Serial Communication
   Serial.begin(115200);
-  
+
 
   while (!Serial);             // Leonardo: wait for serial monitor
-
 }
 
 // the loop function runs over and over again forever
 void loop() {
+  byte error;
+  // Define the MAXM86161 device
+  error = sensor.begin(2, 3);
+  
+  if (error){
+    Serial.println("MAXM86161 initialized!");
+  }
 
-
-  byte error, address;
-  int nDevices;
-  bool found;
+  else {
+    Serial.println("Problem initializing device.");
+  }
 
   Serial.println("Scanning...");
-
-
 
   Wire.beginTransmission(i2c_address);
   error = Wire.endTransmission();
@@ -45,11 +52,21 @@ void loop() {
     Serial.println("Not Detected :(");
   }
 
+  uint8_t id[8];
+  error = sensor.data_from_reg(0xFF, *id);
 
+  if (error){
+    Serial.println("Read Error!");
+  }
 
-
-
-
+  else {
+    Serial.println("Read Successful");
+    Serial.print("ID: ");
+    Serial.println(id[0]);
+  }
+  
+  Serial.println();
+  
   delay(3000);           // wait 3 seconds for next scan
 
   // digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)

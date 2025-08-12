@@ -68,15 +68,23 @@ bool MAXM86161::begin(int interrupt, int gpio, TwoWire *wire, uint32_t i2cSpeed,
     return isInit;
 }
 
-bool MAXM86161::read_from_reg(int address)
-{
-    
-    return false;
-}
+// bool MAXM86161::read_from_reg(int address)
+// {
+//     uint8_t buffer;
+//     bool error;
+//     error = i2c_dev->read(buffer, 1);
+//     return error;
+// }
 
-bool MAXM86161::data_from_reg(int address, int &value)
+bool MAXM86161::data_from_reg(int address, uint8_t &value)
 {
-    return false;
+    bool error = false;
+    uint8_t buffer[8];
+    buffer[0] = address;
+
+    error = i2c_dev->write_then_read(buffer, 1, &value, 1);
+
+    return error;
 }
 
 bool MAXM86161::write_to_reg(int address, int value)
@@ -92,10 +100,18 @@ bool MAXM86161::_init(uint32_t id)
 {
     bool error;
     uint8_t buffer[1];
-    // error = i2c_dev.read()
+
+    // Read the part ID from the device
+    error = data_from_reg(MAXM86161_PART_ID, buffer);
     if (!error){
         return false;
     }
 
-    return false;
+    // Check if the part ID is correct
+    if (buffer[0] = MAXM86161_ID){
+        return true;
+    }
+    else {
+        return false;
+    }
 }
