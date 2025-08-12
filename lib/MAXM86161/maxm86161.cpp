@@ -63,9 +63,10 @@ bool MAXM86161::begin(int interrupt, int gpio, TwoWire *wire, uint32_t i2cSpeed,
 
     i2c_dev->setSpeed(i2cSpeed);
 
-    bool isInit;
-    isInit = _init(device_id);
-    return isInit;
+    return true;
+    // bool isInit;
+    // isInit = _init(device_id);
+    // return isInit;
 }
 
 // bool MAXM86161::read_from_reg(int address)
@@ -78,11 +79,15 @@ bool MAXM86161::begin(int interrupt, int gpio, TwoWire *wire, uint32_t i2cSpeed,
 
 bool MAXM86161::data_from_reg(int address, uint8_t &value)
 {
-    bool error = false;
-    uint8_t buffer[8];
-    buffer[0] = address;
+    bool error = true;
+    // uint8_t buffer[8];
+    // buffer[0] = address;
 
-    error = i2c_dev->write_then_read(buffer, 1, &value, 1);
+    // error = i2c_dev->write_then_read(buffer, 1, &value, 1);
+
+    Adafruit_BusIO_Register data = Adafruit_BusIO_Register(i2c_dev, address);
+
+    error = data.read(&value);
 
     return error;
 }

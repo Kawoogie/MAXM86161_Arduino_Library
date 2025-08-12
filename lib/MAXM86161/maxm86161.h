@@ -5,12 +5,13 @@
 #define maxm86161_h
 
 #include "Arduino.h"
+#include <Adafruit_BusIO_Register.h>
 #include <Adafruit_I2CDevice.h>
 #include <Wire.h>
 
 
 #define MAXM86161_ADDRESS             0x62  //7-bit address
-#define MAXM86161_ID                  0x01  // Part ID value
+#define MAXM86161_ID                  54  // Part ID value
 
 #define I2C_SPEED_STANDARD            100000
 #define I2C_SPEED_FAST                400000

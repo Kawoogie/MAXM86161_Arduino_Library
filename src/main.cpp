@@ -56,10 +56,13 @@ void loop() {
   }
 
   uint8_t id[8];
+  id[0] = 0x00;
   error = sensor.data_from_reg(0xFF, *id);
 
   if (error){
     Serial.println("Read Error!");
+    Serial.print("ID: ");
+    Serial.println(id[0]);
   }
 
   else {
