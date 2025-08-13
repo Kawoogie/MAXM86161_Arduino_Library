@@ -38,41 +38,52 @@ void loop() {
     Serial.println("MAXM86161 initialized!");
   }
 
-  uint8_t reg_val[1];
-  error = sensor.data_from_reg(0x0D, *reg_val);
-  Serial.print("Register Value: ");
-  Serial.println(reg_val[0], BIN);
 
-  reg_val[0] = reg_val[0] + 1;
 
-  Serial.print("Updated Register Vale: ");
-  Serial.println(reg_val[0], BIN);
-
-  // for (int i = 0; i < 10; i++) {
-  //   uint8_t fifo[1];
   //     // Write to Register
-  //   error = sensor.write_to_reg(0x09, i);
+    // error = sensor.write_to_reg(0x09, i);
 
   //   if (!error){
   //     Serial.println("Write Error!");
   //   }
 
-  //   //Read from register to check write
-  //   error = sensor.data_from_reg(0x09, *fifo);
+  uint8_t fifo[1];
+  // Read from register to check starting value
+  error = sensor.data_from_reg(0x09, *fifo);
 
-  //   if (!error){
-  //     Serial.println("Read Error!");
-  //   }
+  if (!error){
+    Serial.println("Read Error!");
+  }
 
-  //   else {
-  //     Serial.print("Register Value: ");
-  //     Serial.println(fifo[0], BIN);
-  //   }
-  // }
+  Serial.print("Register Starting Value: ");
+  Serial.println(fifo[0]);
 
+  // Write to the sensor's register
+  error = sensor.write_to_reg(0x09, 100);
 
+  // Read from register to check it changed
+  error = sensor.data_from_reg(0x09, *fifo);
 
+  if (!error){
+    Serial.println("Read Error!");
+  }
 
+  Serial.print("Register new value: ");
+  Serial.println(fifo[0]);
+
+  Serial.println("Resetting the device");
+  sensor.reset();
+  delay(100);
+  // Read from register to check it is the original value
+  error = sensor.data_from_reg(0x09, *fifo);
+
+  if (!error){
+    Serial.println("Read Error!");
+  }
+
+  Serial.print("Register after reset: ");
+  Serial.println(fifo[0]);
+  
   Serial.println();
   delay(3000);           // wait 3 seconds for next scan
 
