@@ -112,12 +112,12 @@ bool MAXM86161::reset(void)
 {
     bool error;
     uint8_t reg_val[1];
-    error = sensor.data_from_reg(MAXM86161_SYSTEM_CONTROL, *reg_val);
+    error = data_from_reg(MAXM86161_SYSTEM_CONTROL, *reg_val);
     if (!error){
         return false;
     }
     reg_val[0] = reg_val[0] + 1;
-    error = sensor.write_to_reg(MAXM86161_SYSTEM_CONTROL, reg_val[0]);
+    error = write_to_reg(MAXM86161_SYSTEM_CONTROL, reg_val[0]);
     if (!error){
         return false;
     }
@@ -132,12 +132,12 @@ bool MAXM86161::shutdown(void)
 {
     bool error;
     uint8_t reg_val[1];
-    error = sensor.data_from_reg(MAXM86161_SYSTEM_CONTROL, *reg_val);
+    error = data_from_reg(MAXM86161_SYSTEM_CONTROL, *reg_val);
     if (!error){
         return false;
     }
     reg_val[0] = reg_val[0] + 2;
-    error = sensor.write_to_reg(MAXM86161_SYSTEM_CONTROL, reg_val[0]);
+    error = write_to_reg(MAXM86161_SYSTEM_CONTROL, reg_val[0]);
     if (!error){
         return false;
     }

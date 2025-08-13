@@ -38,97 +38,40 @@ void loop() {
     Serial.println("MAXM86161 initialized!");
   }
 
-  // uint8_t id[8];
-  // id[0] = 0x00;
-  // error = sensor.data_from_reg(0xFF, *id);
+  uint8_t reg_val[1];
+  error = sensor.data_from_reg(0x0D, *reg_val);
+  Serial.print("Register Value: ");
+  Serial.println(reg_val[0], BIN);
 
-  // if (!error){
-  //   Serial.println("Read Error!");
-  //   Serial.print("ID: ");
-  //   Serial.println(id[0]);
+  reg_val[0] = reg_val[0] + 1;
+
+  Serial.print("Updated Register Vale: ");
+  Serial.println(reg_val[0], BIN);
+
+  // for (int i = 0; i < 10; i++) {
+  //   uint8_t fifo[1];
+  //     // Write to Register
+  //   error = sensor.write_to_reg(0x09, i);
+
+  //   if (!error){
+  //     Serial.println("Write Error!");
+  //   }
+
+  //   //Read from register to check write
+  //   error = sensor.data_from_reg(0x09, *fifo);
+
+  //   if (!error){
+  //     Serial.println("Read Error!");
+  //   }
+
+  //   else {
+  //     Serial.print("Register Value: ");
+  //     Serial.println(fifo[0], BIN);
+  //   }
   // }
 
-  // else {
-  //   Serial.println("Read Successful");
-  //   Serial.print("ID: ");
-  //   Serial.println(id[0]);
-  // }
-  
-  //Read from register testing
 
-  // fifo[0] = 0x00;
-  // error = sensor.data_from_reg(0x09, *fifo);
 
-  // if (!error){
-  //   Serial.println("Read Error!");
-  //   Serial.print("Fifo: ");
-  //   Serial.println(fifo[0]);
-  // }
-
-  // else {
-  //   Serial.println("Read Successful");
-  //   Serial.print("Fifo: ");
-  //   Serial.println(fifo[0]);
-  // }
-  
-  // // Write to Register
-  // error = sensor.write_to_reg(0x09, 27);
-
-  // if (!error){
-  //   Serial.println("Write Error!");
-  // }
-
-  // else {
-  //   Serial.println("Write Successful");
-  // }
-
-  // //Read from register to check write
-  // error = sensor.data_from_reg(0x09, *fifo);
-
-  // if (!error){
-  //   Serial.println("Read Error!");
-  //   Serial.print("Fifo: ");
-  //   Serial.println(fifo[0]);
-  // }
-
-  // else {
-  //   Serial.println("Read Successful");
-  //   Serial.print("Fifo: ");
-  //   Serial.println(fifo[0]);
-  // }
-
-  // // Write different value Register
-  // error = sensor.write_to_reg(0x09, 100);
-
-  // if (!error){
-  //   Serial.println("Write Error!");
-  // }
-
-  // else {
-  //   Serial.println("Write Successful");
-  // }
-
-  for (int i = 0; i < 10; i++) {
-    uint8_t fifo[1];
-      // Write to Register
-    error = sensor.write_to_reg(0x09, i);
-
-    if (!error){
-      Serial.println("Write Error!");
-    }
-
-    //Read from register to check write
-    error = sensor.data_from_reg(0x09, *fifo);
-
-    if (!error){
-      Serial.println("Read Error!");
-    }
-
-    else {
-      Serial.print("Register Value: ");
-      Serial.println(fifo[0]);
-    }
-  }
 
   Serial.println();
   delay(3000);           // wait 3 seconds for next scan
