@@ -145,13 +145,48 @@ bool MAXM86161::shutdown(void)
     return true;
 }
 
+/*!  @brief Clears the interrupts from the sensor
+ *   @returns True if reset command sent successfully
+ */
 bool MAXM86161::clear_interrupt()
 {
     bool error;
     uint8_t reg_val[1];
     
     error = data_from_reg(MAXM86161_INTERUPT_STATUS, *reg_val);
-    
+
+    return error;
+}
+
+/*!  @brief Puts the sensor in a low power mode between samples. Only works for sample rates of 256 sps and lower.
+ *   @returns True if reset command sent successfully
+ */
+bool MAXM86161::enable_low_power_mode()
+{
+    return false;
+}
+
+/*!  @brief Set the I2C bus to low speed
+ *   @param i2cSpeed Bus speed in kHz. Default of 100,000 kHz
+ *   @returns True if speed adjusted. Note: Doesn't verify actual bus speed.
+ */
+bool MAXM86161::set_i2c_speed_low(uint32_t i2cSpeed)
+{
+    // Set the desired I2C speed
+    bool error = i2c_dev->setSpeed(i2cSpeed);
+
+    return error;
+}
+
+/*!  @brief Set the I2C bus to high speed
+ *   @param i2cSpeed Bus speed in kHz. Default of 400,000 kHz
+ *   @returns True if speed adjusted. Note: Doesn't verify actual bus speed.
+ */
+bool MAXM86161::set_i2c_speed_high(uint32_t i2cSpeed)
+{
+    // Set the desired I2C speed
+    bool error = i2c_dev->setSpeed(i2cSpeed);
+
     return error;
 }
 
