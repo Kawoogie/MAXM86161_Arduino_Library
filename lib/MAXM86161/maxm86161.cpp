@@ -105,6 +105,39 @@ bool MAXM86161::write_to_reg(int address, uint8_t value)
     return error;
 }
 
+/*!  @brief Set the photodiode bias capacitance.
+ *   @param bias bias value, only acceptable values: 1, 5, 6, 7
+ *   @returns True if bias set successfully
+ */
+bool MAXM86161::set_photodiode_bias(uint8_t bias)
+{
+    bool error;
+    uint8_t buffer[8];
+
+    uint8_t values[] = {1, 5, 6, 7};
+    
+    // Check if the bias value is acceptable
+    error = _arrayIncludeElement(values, 4, bias);
+    if (!error){
+        return false;
+    }
+
+    // Write the new bias value
+    error = write_to_reg(MAXM86161_PHOTO_DIODE_BIAS, bias);
+    if (!error){
+        return false;
+    }
+
+    // Read bias to ensure that it is set correctly
+    error = data_from_reg(MAXM86161_PHOTO_DIODE_BIAS, *buffer);
+    if (!error){
+        return false;
+    }
+
+    
+    return buffer[0] == bias;
+}
+
 /*!  @brief Reset the sensor
  *   @returns True if reset command sent successfully
  */
@@ -213,40 +246,6 @@ bool MAXM86161::_init(uint32_t id)
         return false;
     }
 }
-
-/*!  @brief Set the photodiode bias capacitance.
- *   @param bias bias value, only acceptable values: 1, 5, 6, 7
- *   @returns True if bias set successfully
- */
-bool MAXM86161::set_photodiode_bias(uint8_t bias)
-{
-    bool error;
-    uint8_t buffer[8];
-
-    uint8_t values[] = {1, 5, 6, 7};
-    
-    // Check if the bias value is acceptable
-    error = _arrayIncludeElement(values, 4, bias);
-    if (!error){
-        return false;
-    }
-
-    // Write the new bias value
-    error = write_to_reg(MAXM86161_PHOTO_DIODE_BIAS, bias);
-    if (!error){
-        return false;
-    }
-
-    // Read bias to ensure that it is set correctly
-    error = data_from_reg(MAXM86161_PHOTO_DIODE_BIAS, *buffer);
-    if (!error){
-        return false;
-    }
-
-    
-    return buffer[0] == bias;
-}
-
 
 /*!  @brief Checks if element is in array
  *   @param array array of integers to check

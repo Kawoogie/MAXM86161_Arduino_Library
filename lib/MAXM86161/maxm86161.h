@@ -63,6 +63,7 @@ class MAXM86161 {
     bool read_led_current();
     bool set_data_rate();
 
+    bool set_adc_range();
     bool set_integration_time();
     bool set_photodiode_bias(uint8_t bias = 1);
     bool set_led_driver_range();
