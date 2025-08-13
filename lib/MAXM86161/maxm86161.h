@@ -44,7 +44,7 @@ class MAXM86161 {
     // Functions for I2C reading and writing
     // bool read_from_reg(int address);
     bool data_from_reg(int address, uint8_t &value);
-    bool write_to_reg(int address, int value);
+    bool write_to_reg(int address, uint8_t value);
 
     // Sensor initialization
     bool start_sensor(void);
