@@ -105,6 +105,46 @@ bool MAXM86161::write_to_reg(int address, uint8_t value)
     return error;
 }
 
+/*!  @brief Reset the sensor
+ *   @returns True if reset command sent successfully
+ */
+bool MAXM86161::reset(void)
+{
+    bool error;
+    uint8_t reg_val[1];
+    error = sensor.data_from_reg(MAXM86161_SYSTEM_CONTROL, *reg_val);
+    if (!error){
+        return false;
+    }
+    reg_val[0] = reg_val[0] + 1;
+    error = sensor.write_to_reg(MAXM86161_SYSTEM_CONTROL, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    return true;
+}
+
+/*!  @brief Shutdown the sensor in a low power mode
+ *   @returns True if reset command sent successfully
+ */
+bool MAXM86161::shutdown(void)
+{
+    bool error;
+    uint8_t reg_val[1];
+    error = sensor.data_from_reg(MAXM86161_SYSTEM_CONTROL, *reg_val);
+    if (!error){
+        return false;
+    }
+    reg_val[0] = reg_val[0] + 2;
+    error = sensor.write_to_reg(MAXM86161_SYSTEM_CONTROL, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    return true;
+}
+
 /*!  @brief Initializer for post i2c/spi init
  *   @param id ID for the sensor
  *   @returns True if chip identified and initialized
