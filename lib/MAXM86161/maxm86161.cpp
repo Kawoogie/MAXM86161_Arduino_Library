@@ -145,6 +145,16 @@ bool MAXM86161::shutdown(void)
     return true;
 }
 
+bool MAXM86161::clear_interrupt()
+{
+    bool error;
+    uint8_t reg_val[1];
+    
+    error = data_from_reg(MAXM86161_INTERUPT_STATUS, *reg_val);
+    
+    return error;
+}
+
 /*!  @brief Initializer for post i2c/spi init
  *   @param id ID for the sensor
  *   @returns True if chip identified and initialized

@@ -18,6 +18,7 @@
 
 
 // Registers
+#define MAXM86161_INTERUPT_STATUS_1   0x00  // Interrupt Status Registry
 #define MAXM86161_SYSTEM_CONTROL      0x0D  // System Control Registry
 #define MAXM86161_PART_ID             0xFF  // Registery of the part ID
 
