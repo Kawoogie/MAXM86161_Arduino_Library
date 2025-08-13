@@ -71,8 +71,62 @@ void loop() {
     Serial.println(id[0]);
   }
   
-  Serial.println();
 
+  //Read from register
+  uint8_t fifo[8];
+  fifo[0] = 0x00;
+  error = sensor.data_from_reg(0x09, *fifo);
+
+  if (!error){
+    Serial.println("Read Error!");
+    Serial.print("Fifo: ");
+    Serial.println(fifo[0]);
+  }
+
+  else {
+    Serial.println("Read Successful");
+    Serial.print("Fifo: ");
+    Serial.println(fifo[0]);
+  }
+  
+  // Write to Register
+  error = sensor.write_to_reg(0x09, 27);
+
+  if (!error){
+    Serial.println("Write Error!");
+  }
+
+  else {
+    Serial.println("Write Successful");
+  }
+
+  //Read from register to check write
+  error = sensor.data_from_reg(0x09, *fifo);
+
+  if (!error){
+    Serial.println("Read Error!");
+    Serial.print("Fifo: ");
+    Serial.println(fifo[0]);
+  }
+
+  else {
+    Serial.println("Read Successful");
+    Serial.print("Fifo: ");
+    Serial.println(fifo[0]);
+  }
+
+  // Write different value Register
+  error = sensor.write_to_reg(0x09, 100);
+
+  if (!error){
+    Serial.println("Write Error!");
+  }
+
+  else {
+    Serial.println("Write Successful");
+  }
+
+  Serial.println();
   delay(3000);           // wait 3 seconds for next scan
 
   // digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
