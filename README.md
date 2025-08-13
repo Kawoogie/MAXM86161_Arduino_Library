@@ -111,8 +111,34 @@ This code can be imported to
 ## Usage
 Here's an example of how to use the MAXM86161 library to get raw optical data using the chip’s built in interrupts. 
 ### Example 
-```cpp #include "mbed.h" #include "DebounceIntrptLib.h" // LED to indicate the state DigitalOut led(LED1); // Function to toggle the LED void toggle_led() { led = !led; } // Create debounce instance for P5_7 with a debounce time of 50 ms DebounceLib debounce(P5_7, 50, toggle_led); int main() { // Initially turn off the LED led = 0; // Main loop does nothing, as all work is done in interrupts while (true) { ThisThread::sleep_for(1000ms); // Sleep to reduce CPU usage } }
+
 ```
+#include "maxm86161.h"
+
+// Define the sensor
+MAXM86161 sensor;
+
+void setup(){
+  // Variable for catching sensor errors
+  bool error;
+
+  // Start serial communication
+  Serial.begin(115200);
+  
+  // Set up the sensor
+  error = sensor.begin(2, 3);
+  // Report and error setting up the sensor
+  if (!error){
+    Serial.println("Error setting up the MAXM86161");
+  }
+  
+}
+
+void loop(){
+
+}
+```
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
