@@ -73,21 +73,14 @@ bool MAXM86161::begin(int interrupt, int gpio, TwoWire *wire, uint32_t i2cSpeed,
     return isInit;
 }
 
-// bool MAXM86161::read_from_reg(int address)
-// {
-//     uint8_t buffer;
-//     bool error;
-//     error = i2c_dev->read(buffer, 1);
-//     return error;
-// }
-
+/*!  @brief Read from a register on the device
+ *   @param address Register address to read from
+ *   @param value Value from the register
+ *   @returns True if data read is successful
+ */
 bool MAXM86161::data_from_reg(int address, uint8_t &value)
 {
     bool error;
-    // uint8_t buffer[8];
-    // buffer[0] = address;
-
-    // error = i2c_dev->write_then_read(buffer, 1, &value, 1);
 
     Adafruit_BusIO_Register data = Adafruit_BusIO_Register(i2c_dev, address);
 
@@ -96,6 +89,11 @@ bool MAXM86161::data_from_reg(int address, uint8_t &value)
     return error;
 }
 
+/*!  @brief Write to a register on the device
+ *   @param address Register address to write data
+ *   @param value Data to write
+ *   @returns True if data write is successful
+ */
 bool MAXM86161::write_to_reg(int address, uint8_t value)
 {
     bool error;
