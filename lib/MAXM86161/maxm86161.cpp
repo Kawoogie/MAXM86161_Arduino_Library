@@ -153,7 +153,7 @@ bool MAXM86161::clear_interrupt()
     bool error;
     uint8_t reg_val[1];
     
-    error = data_from_reg(MAXM86161_INTERUPT_STATUS, *reg_val);
+    error = data_from_reg(MAXM86161_INTERRUPT_STATUS_1, *reg_val);
 
     return error;
 }
@@ -213,3 +213,52 @@ bool MAXM86161::_init(uint32_t id)
         return false;
     }
 }
+
+/*!  @brief Set the photodiode bias capacitance.
+ *   @param bias bias value, only acceptable values: 1, 5, 6, 7
+ *   @returns True if bias set successfully
+ */
+bool MAXM86161::set_photodiode_bias(uint8_t bias)
+{
+    bool error;
+    uint8_t buffer[8];
+
+    uint8_t values[] = {1, 5, 6, 7};
+    
+    // Check if the bias value is acceptable
+    error = _arrayIncludeElement(values, 4, bias);
+    if (!error){
+        return false;
+    }
+
+    // Write the new bias value
+    error = write_to_reg(MAXM86161_PHOTO_DIODE_BIAS, bias);
+    if (!error){
+        return false;
+    }
+
+    // Read bias to ensure that it is set correctly
+    error = data_from_reg(MAXM86161_PHOTO_DIODE_BIAS, *buffer);
+    if (!error){
+        return false;
+    }
+
+    
+    return buffer[0] == bias;
+}
+
+
+/*!  @brief Checks if element is in array
+ *   @param array array of integers to check
+ *   @param array_size number of elements in the array
+ *   @param element value to search for in array
+ *   @returns True if element is in array, false otherwise
+ */
+bool MAXM86161::_arrayIncludeElement(uint8_t array[], uint8_t array_size, uint8_t element) {
+ for (uint8_t i = 0; i < array_size; i++) {
+      if (array[i] == element) {
+          return true;
+      }
+    }
+  return false;
+ }

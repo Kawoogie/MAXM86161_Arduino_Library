@@ -5,8 +5,6 @@
 
 
 #define i2c_address 92
-
-
   
 MAXM86161 sensor;
 
@@ -39,7 +37,45 @@ void loop() {
   }
 
 
+  // Test bias values
 
+  
+  error = sensor.set_photodiode_bias(1);
+  Serial.print("Photodiode bias set to ");
+  Serial.print(1);
+  Serial.print(" Results: ");
+  Serial.println(error);
+  delay(50);
+  error = sensor.set_photodiode_bias(5);
+  Serial.print("Photodiode bias set to ");
+  Serial.print(5);
+  Serial.print(" Results: ");
+  Serial.println(error);
+  delay(50);
+  error = sensor.set_photodiode_bias(6);
+  Serial.print("Photodiode bias set to ");
+  Serial.print(6);
+  Serial.print(" Results: ");
+  Serial.println(error);
+  delay(50);
+  error = sensor.set_photodiode_bias(7);
+  Serial.print("Photodiode bias set to ");
+  Serial.print(7);
+  Serial.print(" Results: ");
+  Serial.println(error);
+  delay(50);
+  error = sensor.set_photodiode_bias(4);
+  Serial.print("Photodiode bias set to ");
+  Serial.print(4);
+  Serial.print(" Results: ");
+  Serial.println(error);
+  delay(50);
+  error = sensor.set_photodiode_bias(10);
+  Serial.print("Photodiode bias set to ");
+  Serial.print(10);
+  Serial.print(" Results: ");
+  Serial.println(error);
+  delay(50);
   //     // Write to Register
     // error = sensor.write_to_reg(0x09, i);
 

@@ -18,7 +18,8 @@
 
 
 // Registers
-#define MAXM86161_INTERUPT_STATUS_1   0x00  // Interrupt Status Registry
+#define MAXM86161_INTERRUPT_STATUS_1  0x00  // Interrupt Status Registry
+#define MAXM86161_PHOTO_DIODE_BIAS    0x15  // Photodiode Bias Registry
 #define MAXM86161_SYSTEM_CONTROL      0x0D  // System Control Registry
 #define MAXM86161_PART_ID             0xFF  // Registery of the part ID
 
@@ -27,6 +28,9 @@
 #define MAXM86161_REG_FIFO_DATA_MASK  0x7FFFF
 #define MAXM86161_REG_FIFO_RES        19
 #define MAXM86161_REG_FIFO_TAG_MASK   0x1F
+
+
+// typedef declarations
 
 
 class MAXM86161 {
@@ -60,7 +64,7 @@ class MAXM86161 {
     bool set_data_rate();
 
     bool set_integration_time();
-    bool set_photodiode_bias();
+    bool set_photodiode_bias(uint8_t bias = 1);
     bool set_led_driver_range();
 
     // Sensor Operations
@@ -79,6 +83,7 @@ class MAXM86161 {
 
     int _two_comp_to_dec(int two_comp);
     float _temperature_cal(float &temp_value);
+    bool _arrayIncludeElement(uint8_t array[], uint8_t array_size, uint8_t element);
 
 };
 
