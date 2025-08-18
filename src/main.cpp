@@ -8,11 +8,24 @@
   
 MAXM86161 sensor;
 
+// Define the interrupt pin
+const byte interruptPin = D3;  // Interrupt Pin D3
+volatile byte interruptFlag = LOW;
+
+void interrupttrigger(){
+  interruptFlag = HIGH;
+}
+
+
 // the setup function runs once when you press reset or power the board
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
   
+  // Set up the interrupt
+  pinMode(interruptPin, INPUT_PULLDOWN);
+  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, CHANGE);
+
   // Initialize the I2C connection
   Wire.begin();
 
@@ -38,8 +51,6 @@ void loop() {
 
 
   // Test bias values
-
-  
   error = sensor.set_photodiode_bias(1);
   Serial.print("Photodiode bias set to ");
   Serial.print(1);
@@ -120,8 +131,78 @@ void loop() {
   Serial.print("Register after reset: ");
   Serial.println(fifo[0]);
   
+  /*
+    Setting interrupt flag testing
+  */
+
   Serial.println();
-  delay(3000);           // wait 3 seconds for next scan
+  Serial.print("Interrupt Flag Status:");
+  sensor.data_from_reg(0x02, *fifo);
+  Serial.println(fifo[0], BIN);
+
+  Serial.println("Setting Temp Flag");
+  sensor.temp_ready_interrupt_enable(true);
+
+  Serial.print("Interrupt Flag Status:");
+  sensor.data_from_reg(0x02, *fifo);
+  Serial.println(fifo[0], BIN);
+
+  Serial.println("Setting Data Flag");
+  sensor.data_ready_interrupt_enable(true);
+
+  Serial.print("Interrupt Flag Status:");
+  sensor.data_from_reg(0x02, *fifo);
+  Serial.println(fifo[0], BIN);
+
+  Serial.println("Clearing Flags");
+  sensor.temp_ready_interrupt_enable(false);
+  sensor.data_ready_interrupt_enable(false);
+
+  Serial.println();
+
+/*
+  Device Startup Testing
+*/
+
+  Serial.println("Starting up sensor");
+  error = sensor.startup();
+  Serial.print("Startup Status: ");
+  Serial.println(error);
+
+/*
+  Temperature Reading Testing
+*/
+
+  Serial.println();
+  Serial.println("Temperature Testing");
+
+  Serial.println("Setting Temp Flag to enable");
+  sensor.temp_ready_interrupt_enable(true);
+
+  for (int i = 0; i < 5; i++) {
+    Serial.println("Starting a temperature measurement");
+    sensor.start_temp_read();
+
+    Serial.print("Waiting for flag: ");
+    Serial.println(interruptFlag);
+    while (!interruptFlag){
+      delay(1);
+    }
+
+    Serial.print("Interrupt Flag Triggered: ");
+    Serial.println(interruptFlag);
+    delay(100);
+    interruptFlag = LOW;
+
+  }
+    
+
+
+
+  Serial.println();
+  Serial.println();
+  Serial.println();
+  delay(5000);           // wait 3 seconds for next scan
 
   // digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
   // Serial.println("LED On");

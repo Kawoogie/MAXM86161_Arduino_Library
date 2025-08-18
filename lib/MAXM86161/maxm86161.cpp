@@ -111,6 +111,145 @@ bool MAXM86161::write_to_reg(int address, uint8_t value)
 }
 
 
+/*!  @brief Set the starting parameters for the sensor
+ *   @param integration_time Pulse width and integration time setting. Valid range: 0-3.
+ *   @param sample_rate Samples per second setting value. Valid range: 0-19.
+ *   @param averaging Number of samples to average. Valid range: 0-7.
+ *   @param led_current LED drive current for all three LEDs. Valid range: 0-255.
+ *   @returns Returns true if successful
+ */
+bool MAXM86161::startup(uint8_t integrate_time, uint8_t sample_rate, uint8_t averaging, uint8_t led_current)
+{
+    bool error;
+    uint8_t reg_val[2];
+
+    // Reset the sensor
+    error = reset();
+    if (!error){
+        return false;
+    }
+
+    delay(5);
+
+    // Shut down the sensor
+    error = shutdown();
+    if (!error){
+        return false;
+    }
+
+    delay(5);
+
+    // Clear the interrupts
+    error = clear_interrupt();
+    if (!error){
+        return false;
+    }
+
+    // Clear interrupt bank 2
+    error = data_from_reg(MAXM86161_INTERRUPT_STATUS_2, *reg_val);
+    if (!error){
+        return false;
+    }
+
+    // Set the integration time with max ADC range and with no ALC and ADD
+    reg_val[0] = 0b00001100 + integrate_time;
+    error = write_to_reg(MAXM86161_PPG_CONFIG_1, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    // Set sample rate and averaging
+    reg_val[0] = (sample_rate << 2) + averaging;
+    error = write_to_reg(MAXM86161_PPG_CONFIG_2, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    // Set LED Settling, digital filter, burst rate, burst enable
+    reg_val[0] = 0x40;
+    error = write_to_reg(MAXM86161_PPG_CONFIG_3, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    // Set photodiode bias
+    error = set_photodiode_bias(1);
+    if (!error){
+        return false;
+    }
+
+    // Set LED driver range
+    reg_val[0] = 0x3F;
+    error = write_to_reg(MAXM86161_LED_RANGE_1, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    // Set LED current
+    error = set_led_current(led_current);
+    if (!error){
+        return false;
+    }
+
+    // Enable FIFO rollover when full
+    reg_val[0] = 18;
+    error = write_to_reg(MAXM86161_FIFO_CONFIG_2, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    // Enable data ready interrupt
+    error = data_ready_interrupt_enable(true);
+    if (!error){
+        return false;
+    }
+
+    // Set FIFO full to 15 empty spaces left
+    reg_val[0] = 0xF;
+    error = write_to_reg(MAXM86161_FIFO_CONFIG_1, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    // Set LED exposure time slots
+    // LED 2 to time slot 1, LED 3 to time slot 2
+    reg_val[0] = 0x12;
+    error = write_to_reg(MAMX86161_LED_SEQUENCE_1, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    reg_val[0] = 0x93;
+    error = write_to_reg(MAMX86161_LED_SEQUENCE_2, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    reg_val[0] = 0x00;
+    error = write_to_reg(MAMX86161_LED_SEQUENCE_3, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    // Enable low power mode
+    error = enable_low_power_mode();
+    if (!error){
+        return false;
+    }
+
+    // Shut down until the program starts
+    error = shutdown();
+    if (!error){
+        return false;
+    }
+
+    // Clear the flags
+    error = clear_interrupt();
+
+    return error;
+}
+
+
 /*!  @brief Set the calibration values used for the package temperature values
  *   @param a slope of the calibration line
  *   @param b offset of the calibration line
@@ -124,6 +263,67 @@ void MAXM86161::set_temp_cal(float a, float b)
 
     return;
 }
+
+
+/*!  @brief Enable or disable the interrupt when data data is ready to read
+ *   @param status True to enable the interrupt, false to disable
+ *   @returns False if there is an error
+ */
+bool MAXM86161::data_ready_interrupt_enable(bool status)
+{
+    bool error;
+    uint8_t reg_val[1];
+
+    // Get the current status of the registry. Return 0 if error.
+    error = data_from_reg(MAXM86161_INTERRUPT_ENABLE_1, *reg_val);
+    if (!error){
+        return false;
+    }
+
+    // Clear the bit if status is 0
+    if (!status){
+        reg_val[0] = reg_val[0] & ~(status << MAXM86161_DATA_RDY_EN_SHIFT);
+    }
+    // Set the bit if status is not 0.
+    else{
+        reg_val[0] = reg_val[0] | (status << MAXM86161_DATA_RDY_EN_SHIFT);
+    }
+
+    error = write_to_reg(MAXM86161_INTERRUPT_ENABLE_1, reg_val[0]);
+
+    return error;
+}
+
+
+/*!  @brief Enable or disable the interrupt when the pakcage temp data data is ready to read
+ *   @param status True to enable the interrupt, false to disable
+ *   @returns False if there is an error
+ */
+bool MAXM86161::temp_ready_interrupt_enable(bool status)
+{
+    bool error;
+    uint8_t reg_val[1];
+
+    // Get the current status of the registry. Return 0 if error.
+    error = data_from_reg(MAXM86161_INTERRUPT_ENABLE_1, *reg_val);
+    if (!error){
+        return false;
+    }
+
+    // Clear the bit if status is 0
+    if (!status){
+        reg_val[0] = reg_val[0] & ~(status << MAXM86161_DIE_TEMP_RDY_EN_SHIFT);
+    }
+    // Set the bit if status is not 0.
+    else{
+        reg_val[0] = reg_val[0] | (status << MAXM86161_DIE_TEMP_RDY_EN_SHIFT);
+    }
+
+    error = write_to_reg(MAXM86161_INTERRUPT_ENABLE_1, reg_val[0]);
+
+    return error;
+}
+
 
 /*!  @brief Start a temperature read if the temperature measurement is idle.
  *   @returns True temperature read started
@@ -190,6 +390,28 @@ bool MAXM86161::get_package_temp(float &temp_value)
 }
 
 
+/*!  @brief Set the LED drive current for all three LEDs
+ *   @param current The value to set the registries to. Valid range: 0-255
+ *   @returns True if all three LEDs are set
+ */
+bool MAXM86161::set_led_current(uint8_t current)
+{
+    bool error;
+    // Write to LED 1
+    error = write_to_reg(MAMX86161_LED1_PA, current);
+    if (!error){
+        return false;
+    }
+    // Write to LED 2
+    error = write_to_reg(MAMX86161_LED2_PA, current);
+    if (!error){
+        return false;
+    }
+    // Write to LED 3
+    error = write_to_reg(MAMX86161_LED3_PA, current);
+    return error;
+}
+
 /*!  @brief Set the photodiode bias capacitance.
  *   @param bias bias value, only acceptable values: 1, 5, 6, 7
  *   @returns True if bias set successfully
@@ -255,7 +477,7 @@ bool MAXM86161::shutdown(void)
     if (!error){
         return false;
     }
-    reg_val[0] = reg_val[0] + 2;
+    reg_val[0] = reg_val[0] | 1 << MAXM86161_SHUTDOWN_SHIFT;
     error = write_to_reg(MAXM86161_SYSTEM_CONTROL, reg_val[0]);
     if (!error){
         return false;
@@ -282,7 +504,19 @@ bool MAXM86161::clear_interrupt()
  */
 bool MAXM86161::enable_low_power_mode()
 {
-    return false;
+        bool error;
+    uint8_t reg_val[1];
+    error = data_from_reg(MAXM86161_SYSTEM_CONTROL, *reg_val);
+    if (!error){
+        return false;
+    }
+    reg_val[0] = reg_val[0] | 1 << MAXM86161_LOW_POWER_SHIFT;
+    error = write_to_reg(MAXM86161_SYSTEM_CONTROL, reg_val[0]);
+    if (!error){
+        return false;
+    }
+
+    return true;
 }
 
 /*!  @brief Set the I2C bus to low speed
