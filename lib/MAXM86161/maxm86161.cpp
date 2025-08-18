@@ -250,6 +250,26 @@ bool MAXM86161::startup(uint8_t integrate_time, uint8_t sample_rate, uint8_t ave
 }
 
 
+/*!  @brief Start taking optical data with the sensor
+ *   @returns True if no errors
+ */
+bool MAXM86161::start_sensor(void)
+{
+    bool error;
+    uint8_t reg_val[1];
+
+    // Get the data from the register
+    error = data_from_reg(MAXM86161_SYSTEM_CONTROL, *reg_val);
+    if (!error){
+        return false;
+    }
+    // Write the start bit to the register
+    reg_val[0] = reg_val[0] & ~(1 << MAXM86161_SHUTDOWN_SHIFT);
+    error = write_to_reg(MAXM86161_SYSTEM_CONTROL, reg_val[0]);
+
+    return error;
+}
+
 /*!  @brief Set the calibration values used for the package temperature values
  *   @param a slope of the calibration line
  *   @param b offset of the calibration line

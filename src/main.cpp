@@ -24,7 +24,7 @@ void setup() {
   
   // Set up the interrupt
   pinMode(interruptPin, INPUT_PULLDOWN);
-  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, FALLING);  // CHANGE, RISING, FALLING, LOW
 
   // Initialize the I2C connection
   Wire.begin();
@@ -169,30 +169,58 @@ void loop() {
   Serial.print("Startup Status: ");
   Serial.println(error);
 
+
+
+/*
+  Starting the optical sensors Testing
+*/
+
+  Serial.println("Starting LEDs");
+  error = sensor.start_sensor();
+  Serial.print("Start Status: ");
+  Serial.println(error);
+
+
+
 /*
   Temperature Reading Testing
+
+  Have to modify the sensing of the flags to see if the bit is set for the temperature flag
 */
 
   Serial.println();
   Serial.println("Temperature Testing");
 
-  Serial.println("Setting Temp Flag to enable");
+  Serial.println("   Setting Temp Flag to enable");
   sensor.temp_ready_interrupt_enable(true);
 
-  for (int i = 0; i < 5; i++) {
-    Serial.println("Starting a temperature measurement");
+  for (int i = 0; i < 3; i++) {
+    Serial.println("   Starting a temperature measurement");
     sensor.start_temp_read();
 
-    Serial.print("Waiting for flag: ");
+    Serial.print("   Waiting for flag: ");
     Serial.println(interruptFlag);
     while (!interruptFlag){
       delay(1);
     }
 
-    Serial.print("Interrupt Flag Triggered: ");
+    Serial.print("   Interrupt Flag Triggered: ");
     Serial.println(interruptFlag);
-    delay(100);
+    float package_temp;
+
+    error = sensor.get_package_temp(package_temp);
+    
+    if (error){
+      Serial.print("Temperature: ");
+      Serial.println(package_temp);
+    }
+    else {
+      Serial.println("   Error reading the temperature");
+  
+    }
+    
     interruptFlag = LOW;
+    sensor.clear_interrupt();
 
   }
     
