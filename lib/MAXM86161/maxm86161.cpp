@@ -47,6 +47,10 @@ bool MAXM86161::begin(int interrupt, int gpio, TwoWire *wire, uint32_t i2cSpeed,
     // Save the pin values for the interrupt and gpio
     _interrupt = interrupt;
     _gpio = gpio;
+
+    // Set the temperature reading calibration values
+    _temp_cal_a = 1.0f;
+    _temp_cal_b = 0.0f;
     
     // Check if a device is defined and remove it
     if (i2c_dev) {
@@ -89,6 +93,7 @@ bool MAXM86161::data_from_reg(int address, uint8_t &value)
     return error;
 }
 
+
 /*!  @brief Write to a register on the device
  *   @param address Register address to write data
  *   @param value Data to write
@@ -104,6 +109,86 @@ bool MAXM86161::write_to_reg(int address, uint8_t value)
 
     return error;
 }
+
+
+/*!  @brief Set the calibration values used for the package temperature values
+ *   @param a slope of the calibration line
+ *   @param b offset of the calibration line
+ *   @returns void
+ */
+void MAXM86161::set_temp_cal(float a, float b)
+{
+    // Set the temperature reading calibration values
+    _temp_cal_a = a;
+    _temp_cal_b = b;
+
+    return;
+}
+
+/*!  @brief Start a temperature read if the temperature measurement is idle.
+ *   @returns True temperature read started
+ */
+bool MAXM86161::start_temp_read()
+{
+    bool error;
+    uint8_t reg_val[1];
+    // Check to see if the device is doing a temp measurement
+    error = data_from_reg(MAXM86161_TEMP_EN, *reg_val);
+    if (!error || reg_val[0] != 0){
+        return false;
+    }
+
+    // If not doing a temp measurement, start a temp measurement
+    reg_val[0] = 1;
+    error = write_to_reg(MAXM86161_TEMP_EN, reg_val[0]);
+    
+    return error;
+}
+
+
+/*!  @brief Read the package temperature.
+ *   @param temp_value package temperature value
+ *   @returns True temperature read successful
+ */
+bool MAXM86161::get_package_temp(float &temp_value)
+{
+    bool error;
+    uint8_t temp_whole;
+    uint8_t temp_frac;
+    float temperature;
+    uint8_t reg_val[1];
+
+
+    // Check if the sensor temperature measurement is idle
+    error = data_from_reg(MAXM86161_TEMP_EN, *reg_val);
+    if (!error & (reg_val[0] == 0)){
+        return false;
+    }
+
+    // Get the whole number portion
+    error = data_from_reg(MAXM86161_TEMP_INT, temp_whole);
+    if (!error){
+        return false;
+    }
+    
+    // Get the fractional portion
+    error = data_from_reg(MAXM86161_TEMP_FRAC, temp_frac);
+    if (!error){
+        return false;
+    }
+
+    // Convert the whole number portion and make a float
+    temperature = float(_two_comp_to_dec(temp_whole));
+
+    // Add the fractional component
+    temperature += (float(temp_frac & MAXM86161_TEMP_FRAC_MASK) * MAXM86161_FRAC_CONVERT);
+
+    // Output the results
+    temp_value = _temperature_cal(temperature);
+
+    return error;
+}
+
 
 /*!  @brief Set the photodiode bias capacitance.
  *   @param bias bias value, only acceptable values: 1, 5, 6, 7
@@ -137,6 +222,7 @@ bool MAXM86161::set_photodiode_bias(uint8_t bias)
     
     return buffer[0] == bias;
 }
+
 
 /*!  @brief Reset the sensor
  *   @returns True if reset command sent successfully
@@ -245,6 +331,38 @@ bool MAXM86161::_init(uint32_t id)
     else {
         return false;
     }
+}
+
+
+/*!  @brief Twos compliment to decimal converter
+ *   @param two_comp value to convert from
+ *   @returns decimal value of two_comp
+ */
+int MAXM86161::_two_comp_to_dec(int two_comp)
+{
+    // If the value is positive, return it as it
+    if ((two_comp >> 7) == 0){
+        return two_comp;
+    }   
+
+    // If the value is negative, invert the bits, subtract one, 
+    // then invert again.
+    return two_comp | ~((1 << 7) - 1);
+}
+
+
+/*!  @brief Apply the calibration values to the temperature reading
+ *   @param temp_value raw temperature reading needing calibration
+ *   @returns calibrated temperature reading
+ */
+float MAXM86161::_temperature_cal(float &temp_value)
+{
+    float temp_cal;
+    
+    temp_cal = (_temp_cal_a * temp_value) + _temp_cal_b;
+
+    return temp_cal;
+
 }
 
 /*!  @brief Checks if element is in array

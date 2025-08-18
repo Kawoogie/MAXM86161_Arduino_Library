@@ -13,6 +13,8 @@
 #define MAXM86161_ADDRESS             0x62  //7-bit address
 #define MAXM86161_ID                  54  // Part ID value
 
+#define MAXM86161_FRAC_CONVERT        0.0625  // For converting the package temp fractional component to decimal
+
 #define I2C_SPEED_STANDARD            100000
 #define I2C_SPEED_FAST                400000
 
@@ -21,13 +23,17 @@
 #define MAXM86161_INTERRUPT_STATUS_1  0x00  // Interrupt Status Registry
 #define MAXM86161_PHOTO_DIODE_BIAS    0x15  // Photodiode Bias Registry
 #define MAXM86161_SYSTEM_CONTROL      0x0D  // System Control Registry
-#define MAXM86161_PART_ID             0xFF  // Registery of the part ID
+#define MAXM86161_TEMP_EN             0x40  // Temperature Read Start Registry
+#define MAXM86161_TEMP_INT            0x41  // Temperature integer portion registry
+#define MAXM86161_TEMP_FRAC           0x42  // Temperature fraction portion registry
+#define MAXM86161_PART_ID             0xFF  // Part ID Registry
 
 
 // Masks and shift value for getting value out of FIFO data.
 #define MAXM86161_REG_FIFO_DATA_MASK  0x7FFFF
 #define MAXM86161_REG_FIFO_RES        19
 #define MAXM86161_REG_FIFO_TAG_MASK   0x1F
+#define MAXM86161_TEMP_FRAC_MASK      0b0000'1111
 
 
 // typedef declarations
@@ -52,10 +58,11 @@ class MAXM86161 {
 
     // Sensor initialization
     bool start_sensor(void);
+    void set_temp_cal(float a, float b);
 
     // Reading data from the sensor
-    bool start_temp_read();
     bool samples_to_read();
+    bool start_temp_read();
     bool get_package_temp(float &temp_value);
 
     // Sensor settings
@@ -79,6 +86,8 @@ class MAXM86161 {
     private:
     int _interrupt;
     int _gpio;
+    float _temp_cal_a;
+    float _temp_cal_b;
     Adafruit_I2CDevice *i2c_dev = NULL; ///< Pointer to the I2C bus interface
     bool _init(uint32_t id);
 
