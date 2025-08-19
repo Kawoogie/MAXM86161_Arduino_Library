@@ -52,9 +52,9 @@
 #define MAXM86161_DATA_RDY_EN_SHIFT      6   // Shift for setting the Data Ready Interrupt Enable
 #define MAXM86161_SHUTDOWN_SHIFT         1   // Shift for shutting down the device
 #define MAXM86161_LOW_POWER_SHIFT        2   // Shift for putting the device in low power mode
-
-
-
+#define MAXM86161_LED1_RANGE_SHIFT       0   // Shift for setting LED 1 driver range
+#define MAXM86161_LED2_RANGE_SHIFT       2   // Shift for setting LED 2 driver range
+#define MAXM86161_LED3_RANGE_SHIFT       4   // Shift for setting LED 3 driver range
 
 // typedef declarations
 
@@ -92,12 +92,12 @@ class MAXM86161 {
     // Sensor settings
     bool set_led_current(uint8_t current);
     bool read_led_current();
-    bool set_data_rate();
+    bool set_data_rate(int sample_rate);
 
     bool set_adc_range();
     bool set_integration_time();
     bool set_photodiode_bias(uint8_t bias = 1);
-    bool set_led_driver_range();
+    bool set_led_driver_range(uint8_t range);
 
     // Sensor Operations
     bool reset();

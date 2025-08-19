@@ -432,6 +432,32 @@ bool MAXM86161::set_led_current(uint8_t current)
     return error;
 }
 
+
+/*!  @brief Set the sample rate for the optical signals
+ *   @param sample_rate The sample rate in Hz. Valid range: 25-4096
+ *   @returns True if the sample rate is set successfully
+ */
+bool MAXM86161::set_data_rate(int sample_rate)
+{
+    bool error;
+    uint8_t reg_val[1];
+
+    // Translate the int value to a binary registry value
+
+
+    // Read the existing registry value
+
+
+    // Append the new sample rate to the existing registry data
+
+
+    // Write the new value to the registry
+
+
+    return false;
+}
+
+
 /*!  @brief Set the photodiode bias capacitance.
  *   @param bias bias value, only acceptable values: 1, 5, 6, 7
  *   @returns True if bias set successfully
@@ -465,6 +491,32 @@ bool MAXM86161::set_photodiode_bias(uint8_t bias)
     return buffer[0] == bias;
 }
 
+
+/*!  @brief Set the LED driver range for all three LEDs.
+ *   @param range LED driver registry value, only acceptable values: 0 to 3
+ *   @returns True if set successfully
+ */
+bool MAXM86161::set_led_driver_range(uint8_t range)
+{
+    bool error;
+    uint8_t reg_val[1];
+    
+    // Acceptable range values
+    uint8_t values[] = {0, 1, 2, 3};
+    
+    // Check if the range value is acceptable
+    error = _arrayIncludeElement(values, 4, range);
+    if (!error){
+        return false;
+    }
+
+    // Set up the value to write
+    reg_val[0] = (range << MAXM86161_LED1_RANGE_SHIFT) + (range << MAXM86161_LED2_RANGE_SHIFT) + (range << MAXM86161_LED3_RANGE_SHIFT);
+
+    error = write_to_reg(MAXM86161_LED_RANGE_1, reg_val[0]);
+
+    return error;
+}
 
 /*!  @brief Reset the sensor
  *   @returns True if reset command sent successfully

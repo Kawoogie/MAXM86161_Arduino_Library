@@ -24,7 +24,7 @@ void setup() {
   
   // Set up the interrupt
   pinMode(interruptPin, INPUT_PULLDOWN);
-  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, FALLING);  // CHANGE, RISING, FALLING, LOW
+  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, CHANGE);  // CHANGE, RISING, FALLING, LOW
 
   // Initialize the I2C connection
   Wire.begin();
@@ -131,6 +131,39 @@ void loop() {
   Serial.print("Register after reset: ");
   Serial.println(fifo[0]);
   
+  /*
+    LED Driver Setting Testing
+  */
+
+  Serial.println();
+  Serial.println("LED Driver Range Setting Testing");
+
+  // Read the LED Driver Register
+  error = sensor.data_from_reg(0x2A, *fifo);
+
+  Serial.print("Starting Reg Value: ");
+  Serial.println(fifo[0], BIN);
+
+  // Set a new value
+
+  Serial.println("Setting a new value");
+  error = sensor.set_led_driver_range(2);
+
+  Serial.print("New Value: ");
+  error = sensor.data_from_reg(0x2A, *fifo);
+  Serial.print("New Reg Value: ");
+  Serial.println(fifo[0], BIN);
+
+  Serial.println("Setting a new value");
+  error = sensor.set_led_driver_range(3);
+
+  Serial.print("New Value: ");
+  error = sensor.data_from_reg(0x2A, *fifo);
+  Serial.print("New Reg Value: ");
+  Serial.println(fifo[0], BIN);
+  Serial.println();
+
+
   /*
     Setting interrupt flag testing
   */
