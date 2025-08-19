@@ -489,6 +489,40 @@ bool MAXM86161::set_data_rate(uint8_t sample_rate)
 }
 
 
+/*!  @brief Set the ADC range for the photodiode.
+ *   @param range ADC range registry value, only acceptable values: 0 to 3
+ *   @returns True if set successfully
+ */
+bool MAXM86161::set_adc_range(uint8_t range)
+{
+    bool error;
+    uint8_t reg_val[1];
+    
+    // Acceptable range values
+    uint8_t values[] = {0, 1, 2, 3};
+    
+    // Check if the range value is acceptable
+    error = _arrayIncludeElement(values, 4, range);
+    if (!error){
+        return false;
+    }
+
+    // Read the registry to get the value of the other bits
+    error = data_from_reg(MAXM86161_SYSTEM_CONTROL, *reg_val);
+    if (!error){
+        return false;
+    }
+
+    // Append the new sample rate to the existing registry data
+    reg_val[0] = ((reg_val[0] & MAXM86161_ADC_RANGE_MASK) | (range << MAXM86161_ADC_RANGE_SHIFT));
+
+    // Write the updated registry
+    error = write_to_reg(MAXM86161_PPG_CONFIG_1, reg_val[0]);
+
+    return error;
+}
+
+
 /*!  @brief Set the photodiode bias capacitance.
  *   @param bias bias value, only acceptable values: 1, 5, 6, 7
  *   @returns True if bias set successfully
@@ -615,11 +649,8 @@ bool MAXM86161::enable_low_power_mode()
     }
     reg_val[0] = reg_val[0] | 1 << MAXM86161_LOW_POWER_SHIFT;
     error = write_to_reg(MAXM86161_SYSTEM_CONTROL, reg_val[0]);
-    if (!error){
-        return false;
-    }
 
-    return true;
+    return error;
 }
 
 /*!  @brief Set the I2C bus to low speed

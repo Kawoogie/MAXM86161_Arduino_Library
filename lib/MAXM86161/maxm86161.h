@@ -57,7 +57,8 @@
 #define MAXM86161_LED3_RANGE_SHIFT       4   // Shift for setting LED 3 driver range
 #define MAXM86161_PPG_SAMPLE_RATE_MASK   0b0000'0111  // Mask for writing to the PPG Sample Rate
 #define MAXM86161_PPG_SAMPLE_RATE_SHIFT  3   // Shift for setting the PPG Sample rate
-
+#define MAXM86161_ADC_RANGE_MASK         0b1111'0011  // Mask for writing to the ADC range bits
+#define MAXM86161_ADC_RANGE_SHIFT        2   // Shift for setting the ADC range bits
 
 // typedef declarations
 
@@ -99,7 +100,7 @@ class MAXM86161 {
     bool read_led_current(uint8_t &current, uint8_t led);
     bool set_data_rate(uint8_t sample_rate);
 
-    bool set_adc_range();
+    bool set_adc_range(uint8_t range);
     bool set_integration_time();
     bool set_photodiode_bias(uint8_t bias = 1);
     bool set_led_driver_range(uint8_t range);
