@@ -434,16 +434,18 @@ bool MAXM86161::set_led_current(uint8_t current)
 
 
 /*!  @brief Set the sample rate for the optical signals
- *   @param sample_rate The sample rate in Hz. Valid range: 25-4096
+ *   @param sample_rate The sample rate in Hz. Valid range: 0 to 19
  *   @returns True if the sample rate is set successfully
  */
-bool MAXM86161::set_data_rate(int sample_rate)
+bool MAXM86161::set_data_rate(uint8_t sample_rate)
 {
     bool error;
     uint8_t reg_val[1];
 
-    // Translate the int value to a binary registry value
-
+    // Return an error if the sample rate setting is too high
+    if (sample_rate > 20){
+        return false;
+    }
 
     // Read the existing registry value
     error = data_from_reg(MAXM86161_PPG_CONFIG_2, reg_val);
