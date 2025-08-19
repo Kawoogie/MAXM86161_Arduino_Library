@@ -55,7 +55,8 @@
 #define MAXM86161_LED1_RANGE_SHIFT       0   // Shift for setting LED 1 driver range
 #define MAXM86161_LED2_RANGE_SHIFT       2   // Shift for setting LED 2 driver range
 #define MAXM86161_LED3_RANGE_SHIFT       4   // Shift for setting LED 3 driver range
-
+#define MAXM86161_PPG_SAMPLE_RATE_MASK   0b0000'0111  // Mask for writing to the PPG Sample Rate
+#define MAXM86161_PPG_SAMPLE_RATE_SHIFT  3   // Shift for setting the PPG Sample rate
 // typedef declarations
 
 

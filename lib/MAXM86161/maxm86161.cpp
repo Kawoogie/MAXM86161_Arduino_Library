@@ -446,15 +446,18 @@ bool MAXM86161::set_data_rate(int sample_rate)
 
 
     // Read the existing registry value
-
+    error = data_from_reg(MAXM86161_PPG_CONFIG_2, reg_val);
+    if (!error){
+        return false;
+    } 
 
     // Append the new sample rate to the existing registry data
-
+    reg_val[0] = ((reg_val[0] & MAXM86161_PPG_SAMPLE_RATE_MASK) | (sample_rate << MAXM86161_PPG_SAMPLE_RATE_SHIFT));
 
     // Write the new value to the registry
+    error = write_to_reg(MAXM86161_PPG_CONFIG_2, reg_val[0]);
 
-
-    return false;
+    return error;
 }
 
 
