@@ -508,7 +508,7 @@ bool MAXM86161::set_adc_range(uint8_t range)
     }
 
     // Read the registry to get the value of the other bits
-    error = data_from_reg(MAXM86161_SYSTEM_CONTROL, *reg_val);
+    error = data_from_reg(MAXM86161_PPG_CONFIG_1, *reg_val);
     if (!error){
         return false;
     }
@@ -522,6 +522,39 @@ bool MAXM86161::set_adc_range(uint8_t range)
     return error;
 }
 
+
+/*!  @brief Set the integration time for the photodiode.
+ *   @param integration_time ADC range registry value, only acceptable values: 0 to 3
+ *   @returns True if set successfully
+ */
+bool MAXM86161::set_integration_time(uint8_t integration_time)
+{
+    bool error;
+    uint8_t reg_val[1];
+    
+    // Acceptable range values
+    uint8_t values[] = {0, 1, 2, 3};
+    
+    // Check if the range value is acceptable
+    error = _arrayIncludeElement(values, 4, integration_time);
+    if (!error){
+        return false;
+    }
+
+    // Read the registry to get the value of the other bits
+    error = data_from_reg(MAXM86161_PPG_CONFIG_1, *reg_val);
+    if (!error){
+        return false;
+    }
+
+    // Append the new sample rate to the existing registry data
+    reg_val[0] = ((reg_val[0] & MAXM86161_INT_TIME_MASK) | (integration_time << MAXM86161_INT_TIME_SHIFT));
+
+    // Write the updated registry
+    error = write_to_reg(MAXM86161_PPG_CONFIG_1, reg_val[0]);
+
+    return error;
+}
 
 /*!  @brief Set the photodiode bias capacitance.
  *   @param bias bias value, only acceptable values: 1, 5, 6, 7
