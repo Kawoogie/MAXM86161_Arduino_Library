@@ -213,6 +213,16 @@ void loop() {
   Serial.print("Start Status: ");
   Serial.println(error);
 
+/*
+  Data rate setting testing
+*/
+  Serial.println("Setting a fast data rate");
+  sensor.set_data_rate(2);
+  delay(3000);
+  Serial.println("Setting low speed data rate");
+  sensor.set_data_rate(0x0A);
+  delay(3000);
+
 
 
 /*

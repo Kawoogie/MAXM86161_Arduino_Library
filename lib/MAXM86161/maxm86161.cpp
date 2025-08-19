@@ -448,7 +448,7 @@ bool MAXM86161::set_data_rate(uint8_t sample_rate)
     }
 
     // Read the existing registry value
-    error = data_from_reg(MAXM86161_PPG_CONFIG_2, reg_val);
+    error = data_from_reg(MAXM86161_PPG_CONFIG_2, *reg_val);
     if (!error){
         return false;
     } 
