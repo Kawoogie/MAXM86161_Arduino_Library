@@ -345,6 +345,19 @@ bool MAXM86161::temp_ready_interrupt_enable(bool status)
 }
 
 
+/*!  @brief Read the status of the interrupt register to determine what caused the interrupt
+ *   @param status Data from the interrupt register. This also clears the interrupt 
+ *   @returns False if there is an error reading the register
+ */
+bool MAXM86161::interrupt_status(uint8_t &status)
+{
+    bool error;
+
+    error = data_from_reg(MAXM86161_INTERRUPT_STATUS_1, status);
+    
+    return error;
+}
+
 /*!  @brief Start a temperature read if the temperature measurement is idle.
  *   @returns True temperature read started
  */

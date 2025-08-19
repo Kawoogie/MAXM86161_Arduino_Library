@@ -92,7 +92,8 @@ class MAXM86161 {
     bool temp_ready_interrupt_enable(bool status);
 
     // Reading data from the sensor
-    bool interrupt_status(int status);
+    bool read_sensor();
+    bool interrupt_status(uint8_t &status);
     bool samples_to_read();
     bool start_temp_read();
     bool get_package_temp(float &temp_value);
