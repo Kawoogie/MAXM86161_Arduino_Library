@@ -96,7 +96,7 @@ class MAXM86161 {
 
     // Sensor settings
     bool set_led_current(uint8_t current);
-    bool read_led_current();
+    bool read_led_current(uint8_t &current, uint8_t led);
     bool set_data_rate(uint8_t sample_rate);
 
     bool set_adc_range();

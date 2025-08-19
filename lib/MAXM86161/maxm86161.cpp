@@ -433,6 +433,32 @@ bool MAXM86161::set_led_current(uint8_t current)
 }
 
 
+/*!  @brief Read the drive current for the LEDs
+ *   @param current The value that the registery is set to.
+ *   @param led The LED to read the value from. Valid values: 1, 2, or 3.
+ *   @returns True if no error reading the current
+ */
+bool MAXM86161::read_led_current(uint8_t &current, uint8_t led)
+{
+    bool error;
+
+    if (led == 1){
+        error = data_from_reg(MAMX86161_LED1_PA, current);
+        return error;
+    }
+    else if (led == 2){
+        error = data_from_reg(MAMX86161_LED2_PA, current);
+        return error;
+    }
+    else if (led == 3){
+        error = data_from_reg(MAMX86161_LED3_PA, current);
+        return error;
+    }
+    else{
+    return false;
+    }
+}
+
 /*!  @brief Set the sample rate for the optical signals
  *   @param sample_rate The sample rate in Hz. Valid range: 0 to 19
  *   @returns True if the sample rate is set successfully
