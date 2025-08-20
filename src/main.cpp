@@ -223,7 +223,7 @@ void loop() {
   sensor.set_data_rate(0x0A);
   delay(3000);
 
-
+  sensor.data_ready_interrupt_enable(false);
 
 /*
   Temperature Reading Testing

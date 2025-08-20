@@ -93,12 +93,12 @@ class MAXM86161 {
     bool temp_ready_interrupt_enable(bool status);
 
     // Reading data from the sensor
-    bool read_sensor(int &red, int &green, int &ir, float &temp);
+    bool read_sensor(int &red, int &green, int &ir, int &ambient, float &temp);
     bool interrupt_status(uint8_t &status);
     bool samples_to_read();
     bool start_temp_read();
     bool get_package_temp(float &temp_value);
-    bool get_optical_data(int &red, int &green, int &ir);
+    bool get_optical_data(int &red, int &green, int &ir, int &ambient);
 
     // Sensor settings
     bool set_led_current(uint8_t current);

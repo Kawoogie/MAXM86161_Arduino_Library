@@ -346,7 +346,7 @@ bool MAXM86161::temp_ready_interrupt_enable(bool status)
 
 
 
-bool MAXM86161::read_sensor(int &red, int &green, int &ir, float &temp)
+bool MAXM86161::read_sensor(int &red, int &green, int &ir, int &ambient, float &temp)
 {
     bool error;
     bool data_ready = false;
@@ -366,7 +366,7 @@ bool MAXM86161::read_sensor(int &red, int &green, int &ir, float &temp)
 
     // Read the data from the tripped flags
     if (data_ready){
-        error = get_optical_data(red, green, ir);
+        error = get_optical_data(red, green, ir, ambient);
     }
     if (!error){
         return false;
