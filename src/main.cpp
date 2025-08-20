@@ -23,8 +23,8 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   
   // Set up the interrupt
-  pinMode(interruptPin, INPUT_PULLDOWN);
-  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, CHANGE);  // CHANGE, RISING, FALLING, LOW
+  pinMode(interruptPin, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, FALLING);  // CHANGE, RISING, FALLING, LOW
 
   // Initialize the I2C connection
   Wire.begin();
@@ -224,6 +224,7 @@ void loop() {
   delay(3000);
 
   sensor.data_ready_interrupt_enable(false);
+  sensor.clear_interrupt();
 
 /*
   Temperature Reading Testing
@@ -236,6 +237,14 @@ void loop() {
 
   Serial.println("   Setting Temp Flag to enable");
   sensor.temp_ready_interrupt_enable(true);
+  Serial.print("Interrupt Flag at start: ");
+  Serial.println(interruptFlag);
+
+  if (interruptFlag){
+    interruptFlag = LOW;
+  }
+
+  sensor.clear_interrupt();
 
   for (int i = 0; i < 3; i++) {
     Serial.println("   Starting a temperature measurement");
@@ -249,7 +258,7 @@ void loop() {
 
     Serial.print("   Interrupt Flag Triggered: ");
     Serial.println(interruptFlag);
-    float package_temp;
+    float package_temp = -99;
 
     error = sensor.get_package_temp(package_temp);
     
