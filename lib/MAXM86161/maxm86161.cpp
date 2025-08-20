@@ -392,6 +392,21 @@ bool MAXM86161::interrupt_status(uint8_t &status)
     return error;
 }
 
+
+/*!  @brief Reads the number of samples to read in the FIFO
+ *   @param samples Number of samples in the FIFO
+ *   @returns False if there is an error reading the register
+ */
+bool MAXM86161::samples_to_read(int &samples)
+{
+    bool error;
+
+    error = data_from_reg(MAXM86161_FIFO_DATA_COUNTER, samples);
+
+    return error;
+}
+
+
 /*!  @brief Start a temperature read if the temperature measurement is idle.
  *   @returns True temperature read started
  */

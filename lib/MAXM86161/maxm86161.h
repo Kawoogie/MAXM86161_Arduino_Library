@@ -23,6 +23,7 @@
 #define MAXM86161_INTERRUPT_STATUS_1  0x00  // Interrupt Status Registry
 #define MAXM86161_INTERRUPT_STATUS_2  0x01  // SHA Interrupt Status Registry
 #define MAXM86161_INTERRUPT_ENABLE_1  0x02  // Interrupt Enable 1 Registry
+#define MAXM86161_FIFO_DATA_COUNTER   0x07  // FIFO Data Counter Registry
 #define MAXM86161_FIFO_CONFIG_1       0x09  // FIFO Configuration 1 Registry
 #define MAXM86161_FIFO_CONFIG_2       0x0A  // FIFO Configuration 2 Registry
 #define MAXM86161_SYSTEM_CONTROL      0x0D  // System Control Registry
@@ -95,7 +96,7 @@ class MAXM86161 {
     // Reading data from the sensor
     bool read_sensor(int &red, int &green, int &ir, int &ambient, float &temp);
     bool interrupt_status(uint8_t &status);
-    bool samples_to_read();
+    bool samples_to_read(int &samples);
     bool start_temp_read();
     bool get_package_temp(float &temp_value);
     bool get_optical_data(int &red, int &green, int &ir, int &ambient);
