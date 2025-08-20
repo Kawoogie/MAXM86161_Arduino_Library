@@ -345,8 +345,42 @@ bool MAXM86161::temp_ready_interrupt_enable(bool status)
 }
 
 
+
+bool MAXM86161::read_sensor(int &red, int &green, int &ir, float &temp)
+{
+    bool error;
+    bool data_ready = false;
+    bool temp_ready = false;
+    uint8_t interrupt;
+
+    error = interrupt_status(interrupt);
+    if (!error){
+        return false;
+    }
+
+    // Parse the interrupt data to see which flags have been tripped
+    // Check the data_rdy interrupt flag
+    data_ready = interrupt & (1 << MAXM86161_DATA_RDY_EN_SHIFT);
+    // Check the temp_ready interrupt flag
+    temp_ready = interrupt & (1 << MAXM86161_DIE_TEMP_RDY_EN_SHIFT);
+
+    // Read the data from the tripped flags
+    if (data_ready){
+        error = get_optical_data(red, green, ir);
+    }
+    if (!error){
+        return false;
+    }
+
+    if (temp_ready){
+        error = get_package_temp(temp);
+    }
+
+    return error;
+}
+
 /*!  @brief Read the status of the interrupt register to determine what caused the interrupt
- *   @param status Data from the interrupt register. This also clears the interrupt 
+ *   @param status Data from the interrupt register. This also clears the interrupt
  *   @returns False if there is an error reading the register
  */
 bool MAXM86161::interrupt_status(uint8_t &status)

@@ -44,23 +44,24 @@
 
 
 // Masks and shift value for getting value out of FIFO data.
-#define MAXM86161_REG_FIFO_DATA_MASK     0x7FFFF
-#define MAXM86161_REG_FIFO_RES           19
-#define MAXM86161_REG_FIFO_TAG_MASK      0x1F
-#define MAXM86161_TEMP_FRAC_MASK         0b0000'1111
-#define MAXM86161_DIE_TEMP_RDY_EN_SHIFT  2   // Shift for setting the Temp Interrupt Enable
-#define MAXM86161_DATA_RDY_EN_SHIFT      6   // Shift for setting the Data Ready Interrupt Enable
-#define MAXM86161_SHUTDOWN_SHIFT         1   // Shift for shutting down the device
-#define MAXM86161_LOW_POWER_SHIFT        2   // Shift for putting the device in low power mode
-#define MAXM86161_LED1_RANGE_SHIFT       0   // Shift for setting LED 1 driver range
-#define MAXM86161_LED2_RANGE_SHIFT       2   // Shift for setting LED 2 driver range
-#define MAXM86161_LED3_RANGE_SHIFT       4   // Shift for setting LED 3 driver range
-#define MAXM86161_PPG_SAMPLE_RATE_MASK   0b0000'0111  // Mask for writing to the PPG Sample Rate
-#define MAXM86161_PPG_SAMPLE_RATE_SHIFT  3   // Shift for setting the PPG Sample rate
-#define MAXM86161_ADC_RANGE_MASK         0b1111'0011  // Mask for writing to the ADC range bits
-#define MAXM86161_ADC_RANGE_SHIFT        2   // Shift for setting the ADC range bits
-#define MAXM86161_INT_TIME_MASK         0b1111'1100  // Mask for writing to the ADC range bits
-#define MAXM86161_INT_TIME_SHIFT        0   // Shift for setting the ADC range bits
+#define MAXM86161_REG_FIFO_DATA_MASK          0x7FFFF
+#define MAXM86161_REG_FIFO_RES                19
+#define MAXM86161_REG_FIFO_TAG_MASK           0x1F
+#define MAXM86161_TEMP_FRAC_MASK              0b0000'1111
+#define MAXM86161_DIE_TEMP_RDY_EN_SHIFT       2   // Shift for setting the Temp Interrupt Enable
+#define MAXM86161_DATA_RDY_EN_SHIFT           6   // Shift for setting the Data Ready Interrupt Enable
+#define MAXM86161_SHUTDOWN_SHIFT              1   // Shift for shutting down the device
+#define MAXM86161_LOW_POWER_SHIFT             2   // Shift for putting the device in low power mode
+#define MAXM86161_LED1_RANGE_SHIFT            0   // Shift for setting LED 1 driver range
+#define MAXM86161_LED2_RANGE_SHIFT            2   // Shift for setting LED 2 driver range
+#define MAXM86161_LED3_RANGE_SHIFT            4   // Shift for setting LED 3 driver range
+#define MAXM86161_PPG_SAMPLE_RATE_MASK        0b0000'0111  // Mask for writing to the PPG Sample Rate
+#define MAXM86161_PPG_SAMPLE_RATE_SHIFT       3   // Shift for setting the PPG Sample rate
+#define MAXM86161_ADC_RANGE_MASK              0b1111'0011  // Mask for writing to the ADC range bits
+#define MAXM86161_ADC_RANGE_SHIFT             2   // Shift for setting the ADC range bits
+#define MAXM86161_INT_TIME_MASK               0b1111'1100  // Mask for writing to the ADC range bits
+#define MAXM86161_INT_TIME_SHIFT              0   // Shift for setting the ADC range bits
+
 
 // typedef declarations
 
@@ -92,11 +93,12 @@ class MAXM86161 {
     bool temp_ready_interrupt_enable(bool status);
 
     // Reading data from the sensor
-    bool read_sensor();
+    bool read_sensor(int &red, int &green, int &ir, float &temp);
     bool interrupt_status(uint8_t &status);
     bool samples_to_read();
     bool start_temp_read();
     bool get_package_temp(float &temp_value);
+    bool get_optical_data(int &red, int &green, int &ir);
 
     // Sensor settings
     bool set_led_current(uint8_t current);
