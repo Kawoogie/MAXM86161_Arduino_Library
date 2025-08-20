@@ -118,9 +118,23 @@ Here's an example of how to use the MAXM86161 library to get raw optical data us
 // Define the sensor
 MAXM86161 sensor;
 
+// Define the interrupt used to signal data ready
+const byte interruptPin = D3;  // Change to the pin connected to pin 14 of the MAXM86161
+volatile byte interruptFlag = LOW;  // Flag used by interrupt function
+
+// Interrupt function
+void interrupttrigger(){
+  interruptFlag = HIGH;
+}
+
 void setup(){
   // Variable for catching sensor errors
   bool error;
+
+  // Set up the interrupt
+  pinMode(interruptPin, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, FALLING):
+
 
   // Start serial communication
   Serial.begin(115200);
@@ -135,6 +149,18 @@ void setup(){
 }
 
 void loop(){
+  // Byte to catch errors
+  byte error;
+
+  Serial.println("Starting up sensor");
+  error = sensor.startup();
+  Serial.print("Startup Status: ");
+  Serial.println(error);
+
+  Serial.println("Starting LEDs");
+  error = sensor.start_sensor();
+  Serial.print("Start Status: ");
+  Serial.println(error);
 
 }
 ```
