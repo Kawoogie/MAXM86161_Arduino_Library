@@ -223,14 +223,69 @@ void loop() {
   sensor.set_data_rate(0x0A);
   delay(3000);
 
-  sensor.data_ready_interrupt_enable(false);
+
+
+/*
+  Optical Data Reading Testing
+*/
+  
+  Serial.println();
+  Serial.println("Reading Optical Data Test");
+  int red = -99;
+  int green = -99;
+  int ir = -99;
+  int ambient = -99;
+  float temp = -99;
+
+  sensor.shutdown();
+  sensor.clear_fifo();
+  delay(1000);
+  sensor.data_ready_interrupt_enable(true);
   sensor.clear_interrupt();
+  interruptFlag = LOW;
+  sensor.start_sensor();
+  
+  for (int i = 0; i < 20; i++){
+    Serial.print("Interrupt Flag at start: ");
+    Serial.println(interruptFlag);
+
+    while (!interruptFlag){
+      delay(1);
+    }
+
+    Serial.print("   Interrupt Flag Triggered: ");
+    Serial.println(interruptFlag);
+
+    error = sensor.read_sensor(red, green, ir, ambient, temp);
+
+    if (!error){
+      Serial.println("***** ERROR READING DATA ******");
+    }
+    else{
+      Serial.print(red);
+      Serial.print(", ");
+      Serial.print(green);
+      Serial.print(", ");
+      Serial.print(ir);
+      Serial.print(", ");
+      Serial.print(ambient);
+      Serial.print(", ");
+      Serial.println(temp);
+    }
+    // Clear the interrupt flag
+    interruptFlag = LOW;
+    sensor.clear_interrupt();
+  }
+
+
 
 /*
   Temperature Reading Testing
-
-  Have to modify the sensing of the flags to see if the bit is set for the temperature flag
 */
+
+  sensor.data_ready_interrupt_enable(false);
+  sensor.clear_interrupt();
+
 
   Serial.println();
   Serial.println("Temperature Testing");
@@ -270,24 +325,18 @@ void loop() {
       Serial.println("   Error reading the temperature");
   
     }
-    
+    // Reset the flags
     interruptFlag = LOW;
     sensor.clear_interrupt();
 
   }
     
 
-
+  sensor.shutdown();
 
   Serial.println();
   Serial.println();
   Serial.println();
-  delay(5000);           // wait 3 seconds for next scan
-
-  // digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
-  // Serial.println("LED On");
-  // delay(500);                      // wait for a second
-  // digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
-  // Serial.println("LED Off");
-  // delay(500);                      // wait for a second
+  delay(5000);           // wait for next scan
+                
 }

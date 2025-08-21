@@ -192,7 +192,7 @@ bool MAXM86161::startup(uint8_t integrate_time, uint8_t sample_rate, uint8_t ave
     }
 
     // Enable FIFO rollover when full
-    reg_val[0] = 18;
+    reg_val[0] = 0b0001'1000;  // Clear interrupt on FIFO read, repeat interrupt once full condition is reached
     error = write_to_reg(MAXM86161_FIFO_CONFIG_2, reg_val[0]);
     if (!error){
         return false;
@@ -754,6 +754,30 @@ bool MAXM86161::set_i2c_speed_high(uint32_t i2cSpeed)
 {
     // Set the desired I2C speed
     bool error = i2c_dev->setSpeed(i2cSpeed);
+
+    return error;
+}
+
+
+/*!  @brief Clear the FIFO of the device and reset the data pointers
+ *   @returns True if FIFO cleared
+ */
+bool MAXM86161::clear_fifo()
+{
+    bool error;
+    uint8_t reg_val[1];
+    
+    // Get the current status of the register
+    error = data_from_reg(MAXM86161_FIFO_CONFIG_2, *reg_val);
+    if (!error){
+        return false;
+    }
+
+    // Set the correct bit to clear the FIFO
+    reg_val[0] = reg_val[0] | 1 << MAXM86161_FIFO_CLEAR_SHIFT;
+
+    // Write the data to the register to reset the FIFO
+    error = write_to_reg(MAXM86161_FIFO_CONFIG_2, reg_val[0]);
 
     return error;
 }

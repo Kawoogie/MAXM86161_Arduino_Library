@@ -63,6 +63,7 @@
 #define MAXM86161_ADC_RANGE_SHIFT             2   // Shift for setting the ADC range bits
 #define MAXM86161_INT_TIME_MASK               0b1111'1100  // Mask for writing to the ADC range bits
 #define MAXM86161_INT_TIME_SHIFT              0   // Shift for setting the ADC range bits
+#define MAXM86161_FIFO_CLEAR_SHIFT            4   // Shift to clear the FIFO
 
 
 // typedef declarations
@@ -116,6 +117,7 @@ class MAXM86161 {
     bool enable_low_power_mode();
     bool set_i2c_speed_low(uint32_t i2cSpeed = I2C_SPEED_STANDARD);
     bool set_i2c_speed_high(uint32_t i2cSpeed = I2C_SPEED_FAST);
+    bool clear_fifo();
 
     private:
     int _interrupt;
