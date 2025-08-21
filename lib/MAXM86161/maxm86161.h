@@ -24,6 +24,7 @@
 #define MAXM86161_INTERRUPT_STATUS_2  0x01  // SHA Interrupt Status Registry
 #define MAXM86161_INTERRUPT_ENABLE_1  0x02  // Interrupt Enable 1 Registry
 #define MAXM86161_FIFO_DATA_COUNTER   0x07  // FIFO Data Counter Registry
+#define MAXM86161_FIFO_DATA           0x08  // FIFO Data Register
 #define MAXM86161_FIFO_CONFIG_1       0x09  // FIFO Configuration 1 Registry
 #define MAXM86161_FIFO_CONFIG_2       0x0A  // FIFO Configuration 2 Registry
 #define MAXM86161_SYSTEM_CONTROL      0x0D  // System Control Registry
@@ -96,16 +97,13 @@ class MAXM86161 {
     // Reading data from the sensor
     bool read_sensor(int &red, int &green, int &ir, int &ambient, float &temp);
     bool interrupt_status(uint8_t &status);
-    bool samples_to_read(int &samples);
     bool start_temp_read();
     bool get_package_temp(float &temp_value);
-    bool get_optical_data(int &red, int &green, int &ir, int &ambient);
-
+    
     // Sensor settings
     bool set_led_current(uint8_t current);
     bool read_led_current(uint8_t &current, uint8_t led);
     bool set_data_rate(uint8_t sample_rate);
-
     bool set_adc_range(uint8_t range);
     bool set_integration_time(uint8_t integration_time);
     bool set_photodiode_bias(uint8_t bias = 1);
@@ -130,6 +128,8 @@ class MAXM86161 {
     int _two_comp_to_dec(int two_comp);
     float _temperature_cal(float &temp_value);
     bool _arrayIncludeElement(uint8_t array[], uint8_t array_size, uint8_t element);
+    bool _samples_to_read(uint8_t &samples);
+    bool _get_optical_data(int &red, int &green, int &ir, int &ambient);
 
 };
 

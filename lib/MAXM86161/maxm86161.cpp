@@ -366,7 +366,7 @@ bool MAXM86161::read_sensor(int &red, int &green, int &ir, int &ambient, float &
 
     // Read the data from the tripped flags
     if (data_ready){
-        error = get_optical_data(red, green, ir, ambient);
+        error = _get_optical_data(red, green, ir, ambient);
     }
     if (!error){
         return false;
@@ -389,20 +389,6 @@ bool MAXM86161::interrupt_status(uint8_t &status)
 
     error = data_from_reg(MAXM86161_INTERRUPT_STATUS_1, status);
     
-    return error;
-}
-
-
-/*!  @brief Reads the number of samples to read in the FIFO
- *   @param samples Number of samples in the FIFO
- *   @returns False if there is an error reading the register
- */
-bool MAXM86161::samples_to_read(int &samples)
-{
-    bool error;
-
-    error = data_from_reg(MAXM86161_FIFO_DATA_COUNTER, samples);
-
     return error;
 }
 
@@ -841,4 +827,79 @@ bool MAXM86161::_arrayIncludeElement(uint8_t array[], uint8_t array_size, uint8_
       }
     }
   return false;
+ }
+
+
+ /*!  @brief Reads the number of samples to read in the FIFO
+ *   @param samples Number of samples in the FIFO
+ *   @returns False if there is an error reading the register
+ */
+bool MAXM86161::_samples_to_read(uint8_t &samples)
+{
+    bool error;
+
+    error = data_from_reg(MAXM86161_FIFO_DATA_COUNTER, samples);
+
+    return error;
+}
+
+
+ /*!  @brief Reads the sensor data from the FIFO
+ *   @param red Value of the red LED channel
+ *   @param green Value of the green LED channel
+ *   @param ir Value of the IR LED channel
+ *   @param ambient Value of the ambient light channel
+ *   @returns False if there is an error reading the data
+ */
+ bool MAXM86161::_get_optical_data(int &red, int &green, int &ir, int &ambient)
+ {
+    bool error;
+    uint8_t databuffer[128*3];
+    uint8_t samples;
+    uint32_t temp_data;
+    int label[32];
+    int value[32];
+
+    // Get the number of samples to read
+    error = _samples_to_read(samples);
+    if (!error){
+        return false;
+    }
+    
+    // Read all of the sample data from the FIFO
+    Adafruit_BusIO_Register data = Adafruit_BusIO_Register(i2c_dev, MAXM86161_FIFO_DATA);
+    error = data.read(databuffer, samples);
+
+
+    // If there is no error reading the data, parse it
+    if (error){
+        for (int i = 0; i < samples; i++){
+            temp_data = 0;
+            temp_data = (databuffer[i*3 + 0] << 16)
+                | (databuffer[i*3 + 1] << 8)
+                | databuffer[i*3 + 2];
+            // Apply the appropriate mask
+            value[i] = temp_data & MAXM86161_REG_FIFO_DATA_MASK;
+            label[i] = (temp_data >> MAXM86161_REG_FIFO_RES) & MAXM86161_REG_FIFO_TAG_MASK;
+        }
+
+        // Sort the data to the corresponding reading label
+        for (int i = 0; i < 4; i++){
+            if (label[i] == 3){
+                red = value[i];
+            }
+            else if (label[i] == 2){
+                green = value[i];
+            }
+            else if (label[i] == 1){
+                ir = value[i];
+            }
+            else if (label[i] == 4){
+                ambient = value[i];
+            }
+        }
+
+    }
+
+    return error;
  }
