@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include "maxm86161.h"
 
+// #include <Wire.h>
+
 // Declare the MAXM86161 sensor object  
 MAXM86161 sensor;
 
@@ -28,14 +30,7 @@ void setup() {
   Serial.begin(115200);
 
   while (!Serial); 
-  
-  // Define the MAXM86161 device
-  if (!sensor.begin()){
-    Serial.println("Problem initializing device.");
-  }
-  else {
-    Serial.println("MAXM86161 initialized!");
-  }
+
 }
 
 // the loop function runs over and over again forever
@@ -47,6 +42,26 @@ void loop() {
   int ir = -99;
   int ambient = -99;
   float temp = -99;
+  
+  delay(100);
+  Serial.println();
+  Serial.println("***************************");
+  Serial.println("      STARTING       ");
+  Serial.println("***************************");
+  Serial.println();
+
+  delay(100);
+
+
+  error = sensor.begin();
+    // Define the MAXM86161 device
+  if (!error){
+    Serial.println("Problem initializing device.");
+  }
+  else {
+    Serial.println("MAXM86161 initialized!");
+  }
+
 
   // Set up sensor for taking data
   Serial.println("Setting up the sensor");
