@@ -77,8 +77,6 @@ class MAXM86161 {
     ~MAXM86161(void);
 
     bool begin(
-        int interrupt, 
-        int gpio, 
         TwoWire *wire = &Wire, 
         uint32_t i2cSpeed = I2C_SPEED_FAST, 
         uint8_t i2c_addr = MAXM86161_ADDRESS,
@@ -121,8 +119,6 @@ class MAXM86161 {
     bool clear_fifo();
 
     private:
-    int _interrupt;
-    int _gpio;
     float _temp_cal_a;
     float _temp_cal_b;
     Adafruit_I2CDevice *i2c_dev = NULL; ///< Pointer to the I2C bus interface
