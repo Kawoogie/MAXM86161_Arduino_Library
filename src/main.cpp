@@ -8,6 +8,7 @@ MAXM86161 sensor;
 const byte interruptPin = D3;  // Interrupt Pin D3
 volatile byte interruptFlag = LOW;
 
+// Function for the interrupt
 void interrupttrigger(){
   interruptFlag = HIGH;
 }
@@ -17,7 +18,8 @@ void interrupttrigger(){
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
-  
+  digitalWrite(LED_BUILTIN, LOW);
+
   // Set up the interrupt
   pinMode(interruptPin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, FALLING);
@@ -52,7 +54,7 @@ void loop() {
   if (!error){
     Serial.println("Error setting up the sensor");
   }
-
+  sensor.shutdown();
   Serial.println();
   Serial.println("Reading Optical Data and Package Temperature");
 
@@ -62,10 +64,11 @@ void loop() {
   sensor.set_data_rate(4);
 
   // Set the flags and clear the interrupts
-  sensor.temp_ready_interrupt_enable(false);
-  sensor.data_ready_interrupt_enable(true);
+  sensor.clear_fifo();
+  // sensor.temp_ready_interrupt_enable(false);
+  // sensor.data_ready_interrupt_enable(true);
   sensor.clear_interrupt();
-  interruptFlag = LOW;
+  // interruptFlag = LOW;
 
   delay(100);
 
@@ -81,8 +84,11 @@ void loop() {
 
     // Wait for an interrupt to read the data
     while (!interruptFlag){
+      digitalWrite(LED_BUILTIN, HIGH);
       delay(1);
     }
+
+    digitalWrite(LED_BUILTIN, LOW);
 
     // Get the temperature data
     sensor.get_package_temp(temp);
