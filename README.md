@@ -109,10 +109,148 @@ This code can be imported to
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-Here's an example of how to use the MAXM86161 library to get raw optical data using the chip’s built in interrupts. 
+Here's an example of how to use the MAXM86161 library to get raw optical data using the chip’s built in interrupts. The code collects 2000 optical readings, then waits 5 seconds with the MAXM86161 shutdown before repeating another 2000 readings. The package temperature is read and output as well.
+
 ### Example 
-```cpp #include "mbed.h" #include "DebounceIntrptLib.h" // LED to indicate the state DigitalOut led(LED1); // Function to toggle the LED void toggle_led() { led = !led; } // Create debounce instance for P5_7 with a debounce time of 50 ms DebounceLib debounce(P5_7, 50, toggle_led); int main() { // Initially turn off the LED led = 0; // Main loop does nothing, as all work is done in interrupts while (true) { ThisThread::sleep_for(1000ms); // Sleep to reduce CPU usage } }
+
 ```
+#include "maxm86161.h"
+
+// Declare the MAXM86161 sensor object  
+MAXM86161 sensor;
+
+// Define the interrupt pin
+const byte interruptPin = D3;  // Interrupt Pin D3
+
+// Interrupt flag for code flow control
+volatile byte interruptFlag = LOW;
+
+// Function for the interrupt flag
+void interrupttrigger(){
+  // Set the interrupt flag to high
+  interruptFlag = HIGH;
+}
+
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+  // initialize digital pin LED_BUILTIN as an output.
+  pinMode(LED_BUILTIN, OUTPUT);
+  
+  // Set up the interrupt
+  pinMode(interruptPin, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, FALLING);
+
+  // Start Serial Communication
+  Serial.begin(115200);
+
+  // Wait for the serial connection
+  while (!Serial); 
+  
+  // Define the MAXM86161 device
+  if (!sensor.begin()){
+    Serial.println("Problem initializing device.");
+  }
+  else {
+    Serial.println("MAXM86161 initialized!");
+  }
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  // Declar variables for storing data
+  byte error;
+  int red = -99;
+  int green = -99;
+  int ir = -99;
+  int ambient = -99;
+  float temp = -99;
+
+  // Set up sensor for taking data
+  Serial.println("Setting up the sensor");
+  error = sensor.startup();
+  if (!error){
+    Serial.println("Error setting up the sensor");
+  }
+
+  Serial.println();
+  Serial.println("Reading Optical Data and Package Temperature");
+
+  delay(100);
+
+  // Set the sensor data rate to 200 Hz
+  sensor.set_data_rate(4);
+
+  // Set the flags and clear the interrupts
+  sensor.temp_ready_interrupt_enable(false);
+  sensor.data_ready_interrupt_enable(true);
+  sensor.clear_interrupt();
+  interruptFlag = LOW;
+
+  delay(100);
+
+  // Print the data header
+  Serial.println("Red, Green, IR, Ambient, Temp");
+  
+  // Start the sensor reading tempearture and optical data
+  sensor.start_temp_read();
+  sensor.start_sensor();
+
+  // take 2000 data points
+  for (int i = 0; i < 2000; i++) {
+
+    // Wait for an interrupt to read the data
+    while (!interruptFlag){
+      delay(1);
+    }
+
+    // Get the temperature data
+    sensor.get_package_temp(temp);
+    // Get the optical data
+    error = sensor.read_sensor(red, green, ir, ambient);
+
+    if (!error){
+      Serial.println("***** ERROR READING DATA ******");
+    }
+
+    // Return the values if there is no error
+    else{
+      Serial.print(red);
+      Serial.print(", ");
+      Serial.print(green);
+      Serial.print(", ");
+      Serial.print(ir);
+      Serial.print(", ");
+      Serial.print(ambient);
+      Serial.print(", ");
+      Serial.println(temp);
+    }
+
+    // Start a temperature read every 20 optical data points
+    if (!(i % 20)){
+      sensor.start_temp_read();
+    }
+
+    // Clear the interrupt and flag
+    interruptFlag = LOW;
+    sensor.clear_interrupt();
+
+  }
+
+  Serial.println("Shutting Down Sensor for 5 Seconds");
+  sensor.shutdown();
+  Serial.println();
+  Serial.println();
+  Serial.println();
+  delay(5000);           // wait for 5 seconds
+                
+}
+```
+Note: if using something other than the Arduino IDE, include the Arduino library at the top of the code as well
+```
+#include <Arduino.h>
+```
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
