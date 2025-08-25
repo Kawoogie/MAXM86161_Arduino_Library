@@ -406,6 +406,10 @@ void loop() {
   sensor.shutdown();
   sensor.set_data_rate(4);
   sensor.clear_fifo();
+  red = -99;
+  green = -99;
+  ir = -99;
+  ambient = -99;
   delay(1000);
   sensor.temp_ready_interrupt_enable(true);
   sensor.data_ready_interrupt_enable(true);
@@ -415,7 +419,7 @@ void loop() {
   Serial.println("Red, Green, IR, Ambient, Temp");
   sensor.start_sensor();
   sensor.start_temp_read();
-  for (int i = 0; i < 400; i++) {
+  for (int i = 0; i < 20; i++) {
 
     while (!interruptFlag){
       delay(1);
@@ -452,9 +456,7 @@ void loop() {
 
   }
 
-
   sensor.shutdown();
-
   Serial.println();
   Serial.println();
   Serial.println();
