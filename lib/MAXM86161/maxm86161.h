@@ -97,6 +97,7 @@ class MAXM86161 {
 
     // Reading data from the sensor
     bool read_sensor(int &red, int &green, int &ir, int &ambient, float &temp);
+    bool read_sensor(int &red, int &green, int &ir, int &ambient);
     bool interrupt_status(uint8_t &status);
     bool start_temp_read();
     bool get_package_temp(float &temp_value);

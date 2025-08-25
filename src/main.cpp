@@ -224,6 +224,71 @@ void loop() {
   delay(3000);
 
 
+/*
+  Optical Interrupt Reset testing
+*/
+  Serial.println("Optical Interrupt Reset Testing");
+  Serial.println("Shutting sensor down and clearing FIFO and interrupts");
+  sensor.shutdown();
+  
+  Serial.print("Starting Interrupt Status: ");
+  sensor.interrupt_status(*fifo);
+  Serial.println(fifo[0], BIN);
+
+  sensor.clear_fifo();
+  sensor.clear_interrupt();
+  interruptFlag = LOW;
+
+  Serial.print("Starting Interrupt Status after clearning: ");
+  sensor.interrupt_status(*fifo);
+  Serial.println(fifo[0], BIN);
+
+  Serial.println("Turning Interrupts on");
+  // Turn interrupts on
+  sensor.data_ready_interrupt_enable(true);
+  sensor.temp_ready_interrupt_enable(true);
+  error = sensor.data_from_reg(0x02, *fifo);
+  Serial.print("Reg 0x02: ");
+  Serial.println(fifo[0], BIN);
+  
+  delay(100);
+  Serial.println("Turning interrupts off");
+  // Turn interrupts off
+  sensor.data_ready_interrupt_enable(false);
+  sensor.temp_ready_interrupt_enable(false);
+  error = sensor.data_from_reg(0x02, *fifo);
+  Serial.print("Reg 0x02: ");
+  Serial.println(fifo[0], BIN);
+
+  Serial.println("Turning optical interrupt on");
+  sensor.data_ready_interrupt_enable(true);
+  error = sensor.data_from_reg(0x02, *fifo);
+  Serial.print("Reg 0x02: ");
+  Serial.println(fifo[0], BIN);
+
+  Serial.println("Starting Interrupt Status");
+  Serial.print("  Interrupt Flag: ");
+  Serial.println(interruptFlag);
+  Serial.print("  Interrupt Status: ");
+  sensor.interrupt_status(*fifo);
+  Serial.println(fifo[0], BIN);
+
+  Serial.println("Starting Sensor");
+  sensor.start_sensor();
+  delay(100);
+  sensor.interrupt_status(*fifo);
+  delay(100);
+  sensor.shutdown();
+
+  Serial.println("After Interrupt Status");
+  Serial.print("  Interrupt Flag: ");
+  Serial.println(interruptFlag);
+  Serial.print("  Interrupt Status: ");
+  Serial.println(fifo[0], BIN);
+
+  Serial.print("Check that shutdown cleared the interrupts:");
+  sensor.interrupt_status(*fifo);
+  Serial.println(fifo[0], BIN);
 
 /*
   Optical Data Reading Testing
@@ -240,6 +305,7 @@ void loop() {
   sensor.shutdown();
   sensor.clear_fifo();
   delay(1000);
+  sensor.temp_ready_interrupt_enable(false);
   sensor.data_ready_interrupt_enable(true);
   sensor.clear_interrupt();
   interruptFlag = LOW;
@@ -256,7 +322,7 @@ void loop() {
     Serial.print("   Interrupt Flag Triggered: ");
     Serial.println(interruptFlag);
 
-    error = sensor.read_sensor(red, green, ir, ambient, temp);
+    error = sensor.read_sensor(red, green, ir, ambient);
 
     if (!error){
       Serial.println("***** ERROR READING DATA ******");
@@ -268,9 +334,7 @@ void loop() {
       Serial.print(", ");
       Serial.print(ir);
       Serial.print(", ");
-      Serial.print(ambient);
-      Serial.print(", ");
-      Serial.println(temp);
+      Serial.println(ambient);
     }
     // Clear the interrupt flag
     interruptFlag = LOW;
@@ -327,10 +391,67 @@ void loop() {
     }
     // Reset the flags
     interruptFlag = LOW;
-    sensor.clear_interrupt();
+    // sensor.clear_interrupt();
 
   }
     
+  /*
+    Optical and Temperature reading test
+  */
+
+
+  Serial.println();
+  Serial.println("Optical and Temp Reading Test");
+
+  sensor.shutdown();
+  sensor.set_data_rate(4);
+  sensor.clear_fifo();
+  delay(1000);
+  sensor.temp_ready_interrupt_enable(true);
+  sensor.data_ready_interrupt_enable(true);
+  sensor.clear_interrupt();
+  interruptFlag = LOW;
+  delay(100);
+  Serial.println("Red, Green, IR, Ambient, Temp");
+  sensor.start_sensor();
+  sensor.start_temp_read();
+  for (int i = 0; i < 400; i++) {
+
+    while (!interruptFlag){
+      delay(1);
+    }
+
+    // Serial.print("   Interrupt Flag Triggered: ");
+    // Serial.println(interruptFlag);
+
+    error = sensor.read_sensor(red, green, ir, ambient, temp);
+
+    if (!error){
+      Serial.println("***** ERROR READING DATA ******");
+    }
+
+    else{
+      Serial.print(red);
+      Serial.print(", ");
+      Serial.print(green);
+      Serial.print(", ");
+      Serial.print(ir);
+      Serial.print(", ");
+      Serial.print(ambient);
+      Serial.print(", ");
+      Serial.println(temp);
+    }
+
+    // Start a temp read, if so needed
+    sensor.start_temp_read();
+
+    // Clear the interrupt flag
+    interruptFlag = LOW;
+    sensor.clear_interrupt();
+
+
+  }
+
 
   sensor.shutdown();
 

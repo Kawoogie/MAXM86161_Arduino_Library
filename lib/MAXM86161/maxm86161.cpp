@@ -178,9 +178,9 @@ bool MAXM86161::startup(uint8_t integrate_time, uint8_t sample_rate, uint8_t ave
         return false;
     }
 
-    // Set LED driver range
-    reg_val[0] = 0x3F;
-    error = write_to_reg(MAXM86161_LED_RANGE_1, reg_val[0]);
+    // Set LED driver range to the maximum
+    reg_val[0] = 3;
+    error = set_led_driver_range(reg_val[0]);
     if (!error){
         return false;
     }
@@ -219,12 +219,14 @@ bool MAXM86161::startup(uint8_t integrate_time, uint8_t sample_rate, uint8_t ave
         return false;
     }
 
+    // Set LED exposure time slots continued
     reg_val[0] = 0x93;
     error = write_to_reg(MAMX86161_LED_SEQUENCE_2, reg_val[0]);
     if (!error){
         return false;
     }
 
+    // Set LED exposure time slots continued again
     reg_val[0] = 0x00;
     error = write_to_reg(MAMX86161_LED_SEQUENCE_3, reg_val[0]);
     if (!error){
@@ -302,11 +304,11 @@ bool MAXM86161::data_ready_interrupt_enable(bool status)
 
     // Clear the bit if status is 0
     if (!status){
-        reg_val[0] = reg_val[0] & ~(status << MAXM86161_DATA_RDY_EN_SHIFT);
+        reg_val[0] = reg_val[0] & ~(1 << MAXM86161_DATA_RDY_EN_SHIFT);
     }
     // Set the bit if status is not 0.
     else{
-        reg_val[0] = reg_val[0] | (status << MAXM86161_DATA_RDY_EN_SHIFT);
+        reg_val[0] = reg_val[0] | (1 << MAXM86161_DATA_RDY_EN_SHIFT);
     }
 
     error = write_to_reg(MAXM86161_INTERRUPT_ENABLE_1, reg_val[0]);
@@ -332,11 +334,11 @@ bool MAXM86161::temp_ready_interrupt_enable(bool status)
 
     // Clear the bit if status is 0
     if (!status){
-        reg_val[0] = reg_val[0] & ~(status << MAXM86161_DIE_TEMP_RDY_EN_SHIFT);
+        reg_val[0] = reg_val[0] & ~(1 << MAXM86161_DIE_TEMP_RDY_EN_SHIFT);
     }
     // Set the bit if status is not 0.
     else{
-        reg_val[0] = reg_val[0] | (status << MAXM86161_DIE_TEMP_RDY_EN_SHIFT);
+        reg_val[0] = reg_val[0] | (1 << MAXM86161_DIE_TEMP_RDY_EN_SHIFT);
     }
 
     error = write_to_reg(MAXM86161_INTERRUPT_ENABLE_1, reg_val[0]);
@@ -367,9 +369,9 @@ bool MAXM86161::read_sensor(int &red, int &green, int &ir, int &ambient, float &
     // Read the data from the tripped flags
     if (data_ready){
         error = _get_optical_data(red, green, ir, ambient);
-    }
-    if (!error){
-        return false;
+        if (!error){
+            return false;
+        }
     }
 
     if (temp_ready){
@@ -377,6 +379,29 @@ bool MAXM86161::read_sensor(int &red, int &green, int &ir, int &ambient, float &
     }
 
     return error;
+}
+
+bool MAXM86161::read_sensor(int &red, int &green, int &ir, int &ambient)
+{
+    bool error;
+    bool data_ready = false;
+    uint8_t interrupt;
+
+    error = interrupt_status(interrupt);
+    if (!error){
+        return false;
+    }
+
+    // Parse the interrupt data to see if the data_rdy interrupt flag
+    data_ready = interrupt & (1 << MAXM86161_DATA_RDY_EN_SHIFT);
+
+    // Read the data from the tripped flags
+    if (data_ready){
+        error = _get_optical_data(red, green, ir, ambient);
+        return error;
+    }
+
+    return false;
 }
 
 /*!  @brief Read the status of the interrupt register to determine what caused the interrupt
@@ -453,6 +478,8 @@ bool MAXM86161::get_package_temp(float &temp_value)
 
     // Output the results
     temp_value = _temperature_cal(temperature);
+
+    clear_interrupt();
 
     return error;
 }
