@@ -122,6 +122,5 @@ void loop() {
   Serial.println();
   Serial.println();
   Serial.println();
-  delay(5000);           // wait for next scan
-                
+  delay(5000);           // wait for next scan            
 }
