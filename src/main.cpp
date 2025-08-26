@@ -94,7 +94,7 @@ void loop() {
   //     Serial.println("Write Error!");
   //   }
 
-  uint8_t fifo[1];
+  // uint8_t fifo[1];
   // Read from register to check starting value
   // error = sensor.data_from_reg(0x09, *fifo);
 
@@ -168,7 +168,7 @@ void loop() {
     Setting interrupt flag testing
   */
 
-  Serial.println();
+  // Serial.println();
   // Serial.print("Interrupt Flag Status:");
   // sensor.data_from_reg(0x02, *fifo);
   // Serial.println(fifo[0], BIN);
@@ -304,7 +304,7 @@ void loop() {
 
   sensor.shutdown();
   sensor.clear_fifo();
-  delay(1000);
+  delay(100);
   sensor.temp_ready_interrupt_enable(false);
   sensor.data_ready_interrupt_enable(true);
   sensor.clear_interrupt();
