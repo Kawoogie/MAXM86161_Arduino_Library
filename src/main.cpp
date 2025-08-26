@@ -64,6 +64,8 @@ void loop() {
   int ambient = -99;
   float temp = -99;
 
+  sensor.clear_fifo();
+  sensor.clear_interrupt();
   delay(100);
   Serial.println("Red, Green, IR, Ambient, Temp");
   sensor.start_sensor();
@@ -73,8 +75,6 @@ void loop() {
     while (!interruptFlag){
       delay(1);
     }
-
-    // interrupttoggle();
 
     error = sensor.get_package_temp(temp);
     if (!error){
