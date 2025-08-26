@@ -9,8 +9,8 @@ const byte interruptPin = D3;  // Interrupt Pin D3
 volatile byte interruptFlag = LOW;
 
 // Function for the interrupt to trigger the interruptFlag
-void interrupttrigger(){
-  interruptFlag = HIGH;
+void interrupttoggle(){
+  interruptFlag = !interruptFlag;
 }
 
 // the setup function runs once when you press reset or power the board
@@ -22,7 +22,7 @@ void setup() {
   
   // Set up the interrupt
   pinMode(interruptPin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, FALLING);
+  attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttoggle, FALLING);
   
   // Start Serial Communication
   Serial.begin(115200);
@@ -74,7 +74,12 @@ void loop() {
       delay(1);
     }
 
-    sensor.get_package_temp(temp);
+    // interrupttoggle();
+
+    error = sensor.get_package_temp(temp);
+    if (!error){
+      Serial.println("***** ERROR READING TEMP ******");
+    }
     error = sensor.read_sensor(red, green, ir, ambient);
 
     if (!error){
@@ -98,6 +103,7 @@ void loop() {
     }
 
     // Clear the interrupt flag
+    // interrupttoggle();  // Change the state of the interrupt flag
     interruptFlag = LOW;
     sensor.clear_interrupt();
 
