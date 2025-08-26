@@ -212,10 +212,10 @@ void loop() {
   Starting the optical sensors Testing
 */
 
-  Serial.println("Starting LEDs");
-  error = sensor.start_sensor();
-  Serial.print("Start Status: ");
-  Serial.println(error);
+  // Serial.println("Starting LEDs");
+  // error = sensor.start_sensor();
+  // Serial.print("Start Status: ");
+  // Serial.println(error);
 
 /*
   Data rate setting testing
