@@ -476,7 +476,10 @@ bool MAXM86161::get_package_temp(float &temp_value)
     temperature += (float(temp_frac & MAXM86161_TEMP_FRAC_MASK) * MAXM86161_FRAC_CONVERT);
 
     // Output the results
-    temp_value = _temperature_cal(temperature);
+
+    if (temperature){
+        temp_value = _temperature_cal(temperature);
+    }
 
     return error;
 }
