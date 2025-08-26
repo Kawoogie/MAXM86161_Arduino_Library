@@ -43,6 +43,11 @@ void setup() {
     Serial.println("MAXM86161 initialized!");
   }
 
+  Serial.println("Starting up sensor");
+  start_error = sensor.startup();
+  Serial.print("Startup Status: ");
+  Serial.println(start_error);
+
 }
 
 // the loop function runs over and over again forever
@@ -199,10 +204,7 @@ void loop() {
   Device Startup Testing
 */
 
-  Serial.println("Starting up sensor");
-  error = sensor.startup();
-  Serial.print("Startup Status: ");
-  Serial.println(error);
+
 
 
 
