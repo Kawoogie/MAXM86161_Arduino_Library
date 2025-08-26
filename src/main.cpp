@@ -348,58 +348,61 @@ void loop() {
   Temperature Reading Testing
 */
 
-  sensor.data_ready_interrupt_enable(false);
-  sensor.clear_interrupt();
+  // sensor.data_ready_interrupt_enable(false);
+  // sensor.clear_interrupt();
 
 
-  Serial.println();
-  Serial.println("Temperature Testing");
+  // Serial.println();
+  // Serial.println("Temperature Testing");
 
-  Serial.println("   Setting Temp Flag to enable");
-  sensor.temp_ready_interrupt_enable(true);
-  Serial.print("Interrupt Flag at start: ");
-  Serial.println(interruptFlag);
+  // Serial.println("   Setting Temp Flag to enable");
+  // sensor.temp_ready_interrupt_enable(true);
+  // Serial.print("Interrupt Flag at start: ");
+  // Serial.println(interruptFlag);
 
-  if (interruptFlag){
-    interruptFlag = LOW;
-  }
+  // if (interruptFlag){
+  //   interruptFlag = LOW;
+  // }
 
-  sensor.clear_interrupt();
+  // sensor.clear_interrupt();
 
-  for (int i = 0; i < 3; i++) {
-    Serial.println("   Starting a temperature measurement");
-    sensor.start_temp_read();
+  // for (int i = 0; i < 3; i++) {
+  //   Serial.println("   Starting a temperature measurement");
+  //   sensor.start_temp_read();
 
-    Serial.print("   Waiting for flag: ");
-    Serial.println(interruptFlag);
-    while (!interruptFlag){
-      delay(1);
-    }
+  //   Serial.print("   Waiting for flag: ");
+  //   Serial.println(interruptFlag);
+  //   while (!interruptFlag){
+  //     delay(1);
+  //   }
 
-    Serial.print("   Interrupt Flag Triggered: ");
-    Serial.println(interruptFlag);
-    float package_temp = -99;
+  //   Serial.print("   Interrupt Flag Triggered: ");
+  //   Serial.println(interruptFlag);
+  //   float package_temp = -99;
 
-    error = sensor.get_package_temp(package_temp);
+  //   error = sensor.get_package_temp(package_temp);
     
-    if (error){
-      Serial.print("Temperature: ");
-      Serial.println(package_temp);
-    }
-    else {
-      Serial.println("   Error reading the temperature");
+  //   if (error){
+  //     Serial.print("Temperature: ");
+  //     Serial.println(package_temp);
+  //   }
+  //   else {
+  //     Serial.println("   Error reading the temperature");
   
-    }
-    // Reset the flags
-    interruptFlag = LOW;
-    // sensor.clear_interrupt();
+  //   }
+  //   // Reset the flags
+  //   interruptFlag = LOW;
+  //   // sensor.clear_interrupt();
 
-  }
+  // }
     
   /*
     Optical and Temperature reading test
   */
-
+  red = -99;
+  green = -99;
+  ir = -99;
+  ambient = -99;
 
   Serial.println();
   Serial.println("Optical and Temp Reading Test");
@@ -407,15 +410,13 @@ void loop() {
   sensor.shutdown();
   sensor.set_data_rate(4);
   sensor.clear_fifo();
-  red = -99;
-  green = -99;
-  ir = -99;
-  ambient = -99;
-  delay(1000);
-  sensor.temp_ready_interrupt_enable(false);
-  sensor.data_ready_interrupt_enable(true);
   sensor.clear_interrupt();
   interruptFlag = LOW;
+
+  delay(1000);
+  sensor.temp_ready_interrupt_enable(true);
+  sensor.data_ready_interrupt_enable(true);
+
   delay(100);
   Serial.println("Red, Green, IR, Ambient, Temp");
   sensor.start_sensor();
