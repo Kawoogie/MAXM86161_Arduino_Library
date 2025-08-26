@@ -32,22 +32,24 @@ void setup() {
   // Start Serial Communication
   Serial.begin(115200);
 
-
   while (!Serial);             // Leonardo: wait for serial monitor
+
+  byte start_error = sensor.begin(2, 3);
+
+  if (!start_error){
+    Serial.println("Problem initializing device.");
+  }
+  else {
+    Serial.println("MAXM86161 initialized!");
+  }
+
 }
 
 // the loop function runs over and over again forever
 void loop() {
   byte error;
   // Define the MAXM86161 device
-  error = sensor.begin(2, 3);
 
-  if (!error){
-    Serial.println("Problem initializing device.");
-  }
-  else {
-    Serial.println("MAXM86161 initialized!");
-  }
 
 
   // Test bias values
