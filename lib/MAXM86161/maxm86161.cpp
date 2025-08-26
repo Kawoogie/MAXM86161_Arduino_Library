@@ -30,6 +30,10 @@ MAXM86161::~MAXM86161(void)
 
 /*!
  *    @brief  Sets up the hardware and initializes I2C
+ *    @param  interrupt
+ *            The pin used to interrupt the sensor.
+ *    @param  gpio
+ *            The pin used for the GPIO for the sensor.
  *    @param  wirePort
  *            The Wire object to be used for I2C connections.
  *    @param  i2cSpeed
@@ -38,12 +42,14 @@ MAXM86161::~MAXM86161(void)
  *            The I2C address to be used.
  *    @return True if initialization was successful, otherwise false.
  */
-bool MAXM86161::begin(TwoWire *wire, uint32_t i2cSpeed, uint8_t i2c_addr, uint32_t device_id)
+bool MAXM86161::begin(int interrupt, int gpio, TwoWire *wire, uint32_t i2cSpeed, uint8_t i2c_addr, uint32_t device_id)
 {
+    _interrupt = interrupt;
+    _gpio = gpio;
     // Set the temperature reading calibration values
     _temp_cal_a = 1.0f;
     _temp_cal_b = 0.0f;
-    
+    bool error = false;
     // Check if a device is defined and remove it
     if (i2c_dev) {
         delete i2c_dev; // remove old interface
@@ -58,7 +64,7 @@ bool MAXM86161::begin(TwoWire *wire, uint32_t i2cSpeed, uint8_t i2c_addr, uint32
     }
 
     // Set the desired I2C speed
-    bool error = i2c_dev->setSpeed(i2cSpeed);
+    error = i2c_dev->setSpeed(i2cSpeed);
     if (!error){
         return false;
     }
