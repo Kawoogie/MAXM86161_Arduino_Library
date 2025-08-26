@@ -61,10 +61,10 @@ void loop() {
   /*
     Optical and Temperature reading test
   */
-  red = -99;
-  green = -99;
-  ir = -99;
-  ambient = -99;
+  // red = -99;
+  // green = -99;
+  // ir = -99;
+  // ambient = -99;
 
   Serial.println();
   Serial.println("Optical and Temp Reading Test");
