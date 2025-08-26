@@ -58,20 +58,11 @@ void loop() {
   int ambient = -99;
   float temp = -99;
     
-  /*
-    Optical and Temperature reading test
-  */
-  // red = -99;
-  // green = -99;
-  // ir = -99;
-  // ambient = -99;
-
   Serial.println();
   Serial.println("Optical and Temp Reading Test");
 
-  // sensor.clear_fifo();
-  sensor.clear_interrupt();
-  interruptFlag = LOW;
+  // sensor.clear_interrupt();
+  // interruptFlag = LOW;
 
   delay(100);
   sensor.temp_ready_interrupt_enable(false);
