@@ -4,7 +4,7 @@
 #include <Wire.h>
 
 
-// #define i2c_address 92
+#define i2c_address 92
   
 MAXM86161 sensor;
 
@@ -27,7 +27,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, FALLING);  // CHANGE, RISING, FALLING, LOW
 
   // Initialize the I2C connection
-  // Wire.begin();
+  Wire.begin();
 
   // Start Serial Communication
   Serial.begin(115200);
@@ -338,6 +338,8 @@ void loop() {
     }
     // Clear the interrupt flag
     interruptFlag = LOW;
+    // Clear the sensor interrupt
+    sensor.clear_interrupt(); // Note: This is needed. Sensor hangs up eventually
   }
 
 
