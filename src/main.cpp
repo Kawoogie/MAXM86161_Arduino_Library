@@ -1,10 +1,10 @@
 #include <Arduino.h>
 #include "maxm86161.h"
 
-#include <Wire.h>
+// #include <Wire.h>
 
 
-#define i2c_address 92
+// #define i2c_address 92
   
 MAXM86161 sensor;
 
@@ -27,7 +27,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, FALLING);  // CHANGE, RISING, FALLING, LOW
 
   // Initialize the I2C connection
-  Wire.begin();
+  // Wire.begin();
 
   // Start Serial Communication
   Serial.begin(115200);
