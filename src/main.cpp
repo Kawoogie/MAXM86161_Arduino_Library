@@ -10,7 +10,12 @@ volatile byte interruptFlag = LOW;
 
 // Function for the interrupt to trigger the interruptFlag
 void interrupttoggle(){
-  interruptFlag = !interruptFlag;
+  interruptFlag = HIGH;
+}
+
+// Function to clear the interruptFlag
+void interruptclear(){
+  interruptFlag = LOW;
 }
 
 // the setup function runs once when you press reset or power the board
@@ -92,13 +97,16 @@ void loop() {
     Serial.print(" Pin: ");
     Serial.println(interruptpinstate);
 
+    noInterrupts();
     error = sensor.get_package_temp(temp);
-    
+    interrupts();
     if (!error){
       Serial.println("***** ERROR READING TEMP ******");
     }
+    
+    noInterrupts();
     error = sensor.read_sensor(red, green, ir, ambient);
-
+    interrupts();
     if (!error){
       Serial.println("***** ERROR READING DATA ******");
     }
@@ -120,14 +128,14 @@ void loop() {
     }
 
     // Clear the interrupt flag
-    interruptFlag = LOW;
+    interruptclear();
     sensor.clear_interrupt();
 
   }
 
   // Stop the sensor
   sensor.shutdown();
-
+  
   Serial.println();
   Serial.println();
   Serial.println();
