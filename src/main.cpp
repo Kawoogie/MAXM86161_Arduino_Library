@@ -47,6 +47,9 @@ void setup() {
   // Shut down the sensor and wait for the command to start reading data
   sensor.shutdown();
 
+  // Disable interrupts from package temp ready
+  sensor.temp_ready_interrupt_enable(false);
+
   // Shut down the LED to indicate that the sensor is ready
   digitalWrite(LED_BUILTIN, LOW);
 
