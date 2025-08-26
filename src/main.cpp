@@ -52,7 +52,7 @@ void loop() {
   Serial.println();
 
   delay(100);
-  error = sensor.begin();
+  error = sensor.begin(2);
   
     // Define the MAXM86161 device
   if (!error){
