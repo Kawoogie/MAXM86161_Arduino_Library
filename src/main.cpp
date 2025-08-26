@@ -75,10 +75,10 @@ void loop() {
   for (int i = 0; i < 200; i++) {
 
     // Hangup troubleshooting
-    Serial.print("Flag: ");
+    Serial.print("BEFORE Flag: ");
     Serial.print(interruptFlag);
     bool interruptpinstate = digitalRead(interruptPin);
-    Serial.print("   Pin Before: ");
+    Serial.print(" Pin: ");
     Serial.print(interruptpinstate);
 
 
@@ -86,8 +86,10 @@ void loop() {
       delay(1);
     }
 
+    Serial.print(" |  AFTER: Flag: ");
+    Serial.print(interruptFlag);
     interruptpinstate = digitalRead(interruptPin);
-    Serial.print("   Pin After: ");
+    Serial.print(" Pin: ");
     Serial.println(interruptpinstate);
 
     error = sensor.get_package_temp(temp);
@@ -118,7 +120,6 @@ void loop() {
     }
 
     // Clear the interrupt flag
-    // interrupttoggle();  // Change the state of the interrupt flag
     interruptFlag = LOW;
     sensor.clear_interrupt();
 
