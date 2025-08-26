@@ -106,30 +106,30 @@ void loop() {
   Serial.println(fifo[0]);
 
   // Write to the sensor's register
-  error = sensor.write_to_reg(0x09, 100);
+  // error = sensor.write_to_reg(0x09, 100);
 
   // Read from register to check it changed
-  error = sensor.data_from_reg(0x09, *fifo);
+  // error = sensor.data_from_reg(0x09, *fifo);
 
-  if (!error){
-    Serial.println("Read Error!");
-  }
+  // if (!error){
+  //   Serial.println("Read Error!");
+  // }
 
-  Serial.print("Register new value: ");
-  Serial.println(fifo[0]);
+  // Serial.print("Register new value: ");
+  // Serial.println(fifo[0]);
 
-  Serial.println("Resetting the device");
-  sensor.reset();
-  delay(100);
-  // Read from register to check it is the original value
-  error = sensor.data_from_reg(0x09, *fifo);
+  // Serial.println("Resetting the device");
+  // sensor.reset();
+  // delay(100);
+  // // Read from register to check it is the original value
+  // error = sensor.data_from_reg(0x09, *fifo);
 
-  if (!error){
-    Serial.println("Read Error!");
-  }
+  // if (!error){
+  //   Serial.println("Read Error!");
+  // }
 
-  Serial.print("Register after reset: ");
-  Serial.println(fifo[0]);
+  // Serial.print("Register after reset: ");
+  // Serial.println(fifo[0]);
   
   /*
     LED Driver Setting Testing
