@@ -169,29 +169,29 @@ void loop() {
   */
 
   Serial.println();
-  Serial.print("Interrupt Flag Status:");
-  sensor.data_from_reg(0x02, *fifo);
-  Serial.println(fifo[0], BIN);
+  // Serial.print("Interrupt Flag Status:");
+  // sensor.data_from_reg(0x02, *fifo);
+  // Serial.println(fifo[0], BIN);
 
-  Serial.println("Setting Temp Flag");
-  sensor.temp_ready_interrupt_enable(true);
+  // Serial.println("Setting Temp Flag");
+  // sensor.temp_ready_interrupt_enable(true);
 
-  Serial.print("Interrupt Flag Status:");
-  sensor.data_from_reg(0x02, *fifo);
-  Serial.println(fifo[0], BIN);
+  // Serial.print("Interrupt Flag Status:");
+  // sensor.data_from_reg(0x02, *fifo);
+  // Serial.println(fifo[0], BIN);
 
-  Serial.println("Setting Data Flag");
-  sensor.data_ready_interrupt_enable(true);
+  // Serial.println("Setting Data Flag");
+  // sensor.data_ready_interrupt_enable(true);
 
-  Serial.print("Interrupt Flag Status:");
-  sensor.data_from_reg(0x02, *fifo);
-  Serial.println(fifo[0], BIN);
+  // Serial.print("Interrupt Flag Status:");
+  // sensor.data_from_reg(0x02, *fifo);
+  // Serial.println(fifo[0], BIN);
 
-  Serial.println("Clearing Flags");
-  sensor.temp_ready_interrupt_enable(false);
-  sensor.data_ready_interrupt_enable(false);
+  // Serial.println("Clearing Flags");
+  // sensor.temp_ready_interrupt_enable(false);
+  // sensor.data_ready_interrupt_enable(false);
 
-  Serial.println();
+  // Serial.println();
 
 /*
   Device Startup Testing
