@@ -227,68 +227,68 @@ void loop() {
 /*
   Optical Interrupt Reset testing
 */
-  Serial.println("Optical Interrupt Reset Testing");
-  Serial.println("Shutting sensor down and clearing FIFO and interrupts");
-  sensor.shutdown();
+  // Serial.println("Optical Interrupt Reset Testing");
+  // Serial.println("Shutting sensor down and clearing FIFO and interrupts");
+  // sensor.shutdown();
   
-  Serial.print("Starting Interrupt Status: ");
-  sensor.interrupt_status(*fifo);
-  Serial.println(fifo[0], BIN);
+  // Serial.print("Starting Interrupt Status: ");
+  // sensor.interrupt_status(*fifo);
+  // Serial.println(fifo[0], BIN);
 
-  sensor.clear_fifo();
-  sensor.clear_interrupt();
-  interruptFlag = LOW;
+  // sensor.clear_fifo();
+  // sensor.clear_interrupt();
+  // interruptFlag = LOW;
 
-  Serial.print("Starting Interrupt Status after clearning: ");
-  sensor.interrupt_status(*fifo);
-  Serial.println(fifo[0], BIN);
+  // Serial.print("Starting Interrupt Status after clearning: ");
+  // sensor.interrupt_status(*fifo);
+  // Serial.println(fifo[0], BIN);
 
-  Serial.println("Turning Interrupts on");
-  // Turn interrupts on
-  sensor.data_ready_interrupt_enable(true);
-  sensor.temp_ready_interrupt_enable(true);
-  error = sensor.data_from_reg(0x02, *fifo);
-  Serial.print("Reg 0x02: ");
-  Serial.println(fifo[0], BIN);
+  // Serial.println("Turning Interrupts on");
+  // // Turn interrupts on
+  // sensor.data_ready_interrupt_enable(true);
+  // sensor.temp_ready_interrupt_enable(true);
+  // error = sensor.data_from_reg(0x02, *fifo);
+  // Serial.print("Reg 0x02: ");
+  // Serial.println(fifo[0], BIN);
   
-  delay(100);
-  Serial.println("Turning interrupts off");
-  // Turn interrupts off
-  sensor.data_ready_interrupt_enable(false);
-  sensor.temp_ready_interrupt_enable(false);
-  error = sensor.data_from_reg(0x02, *fifo);
-  Serial.print("Reg 0x02: ");
-  Serial.println(fifo[0], BIN);
+  // delay(100);
+  // Serial.println("Turning interrupts off");
+  // // Turn interrupts off
+  // sensor.data_ready_interrupt_enable(false);
+  // sensor.temp_ready_interrupt_enable(false);
+  // error = sensor.data_from_reg(0x02, *fifo);
+  // Serial.print("Reg 0x02: ");
+  // Serial.println(fifo[0], BIN);
 
-  Serial.println("Turning optical interrupt on");
-  sensor.data_ready_interrupt_enable(true);
-  error = sensor.data_from_reg(0x02, *fifo);
-  Serial.print("Reg 0x02: ");
-  Serial.println(fifo[0], BIN);
+  // Serial.println("Turning optical interrupt on");
+  // sensor.data_ready_interrupt_enable(true);
+  // error = sensor.data_from_reg(0x02, *fifo);
+  // Serial.print("Reg 0x02: ");
+  // Serial.println(fifo[0], BIN);
 
-  Serial.println("Starting Interrupt Status");
-  Serial.print("  Interrupt Flag: ");
-  Serial.println(interruptFlag);
-  Serial.print("  Interrupt Status: ");
-  sensor.interrupt_status(*fifo);
-  Serial.println(fifo[0], BIN);
+  // Serial.println("Starting Interrupt Status");
+  // Serial.print("  Interrupt Flag: ");
+  // Serial.println(interruptFlag);
+  // Serial.print("  Interrupt Status: ");
+  // sensor.interrupt_status(*fifo);
+  // Serial.println(fifo[0], BIN);
 
-  Serial.println("Starting Sensor");
-  sensor.start_sensor();
-  delay(100);
-  sensor.interrupt_status(*fifo);
-  delay(100);
-  sensor.shutdown();
+  // Serial.println("Starting Sensor");
+  // sensor.start_sensor();
+  // delay(100);
+  // sensor.interrupt_status(*fifo);
+  // delay(100);
+  // sensor.shutdown();
 
-  Serial.println("After Interrupt Status");
-  Serial.print("  Interrupt Flag: ");
-  Serial.println(interruptFlag);
-  Serial.print("  Interrupt Status: ");
-  Serial.println(fifo[0], BIN);
+  // Serial.println("After Interrupt Status");
+  // Serial.print("  Interrupt Flag: ");
+  // Serial.println(interruptFlag);
+  // Serial.print("  Interrupt Status: ");
+  // Serial.println(fifo[0], BIN);
 
-  Serial.print("Check that shutdown cleared the interrupts:");
-  sensor.interrupt_status(*fifo);
-  Serial.println(fifo[0], BIN);
+  // Serial.print("Check that shutdown cleared the interrupts:");
+  // sensor.interrupt_status(*fifo);
+  // Serial.println(fifo[0], BIN);
 
 /*
   Optical Data Reading Testing
