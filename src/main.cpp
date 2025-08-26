@@ -17,6 +17,8 @@ void interrupttrigger(){
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
+  // Turn on the LED while starting up
+  digitalWrite(LED_BUILTIN, HIGH);
   
   // Set up the interrupt
   pinMode(interruptPin, INPUT_PULLUP);
@@ -39,13 +41,14 @@ void setup() {
   }
 
   // Set up the sensor parameters
-  Serial.println("Starting up sensor");
   start_error = sensor.startup();
-  Serial.print("Startup Status: ");
-  Serial.println(start_error);
-
-  sensor.shutdown();
+  // Set the data rate of the sensor
   sensor.set_data_rate(4);
+  // Shut down the sensor and wait for the command to start reading data
+  sensor.shutdown();
+
+  // Shut down the LED to indicate that the sensor is ready
+  digitalWrite(LED_BUILTIN, LOW);
 
 }
 
@@ -57,16 +60,6 @@ void loop() {
   int ir = -99;
   int ambient = -99;
   float temp = -99;
-    
-  Serial.println();
-  Serial.println("Optical and Temp Reading Test");
-
-  // sensor.clear_interrupt();
-  // interruptFlag = LOW;
-
-  // delay(100);
-  // sensor.temp_ready_interrupt_enable(false);
-  // sensor.data_ready_interrupt_enable(true);
 
   delay(100);
   Serial.println("Red, Green, IR, Ambient, Temp");
