@@ -84,7 +84,7 @@ void loop() {
 
 
     while (!interruptFlag){
-      delay(1);
+      // delay(1);
     }
 
     // Hangup troubleshooting
