@@ -294,53 +294,53 @@ void loop() {
   Optical Data Reading Testing
 */
   
-  Serial.println();
-  Serial.println("Reading Optical Data Test");
+  // Serial.println();
+  // Serial.println("Reading Optical Data Test");
   int red = -99;
   int green = -99;
   int ir = -99;
   int ambient = -99;
   float temp = -99;
 
-  sensor.shutdown();
-  sensor.clear_fifo();
-  delay(100);
-  sensor.temp_ready_interrupt_enable(false);
-  sensor.data_ready_interrupt_enable(true);
-  sensor.clear_interrupt();
-  interruptFlag = LOW;
-  sensor.start_sensor();
+  // sensor.shutdown();
+  // sensor.clear_fifo();
+  // delay(100);
+  // sensor.temp_ready_interrupt_enable(false);
+  // sensor.data_ready_interrupt_enable(true);
+  // sensor.clear_interrupt();
+  // interruptFlag = LOW;
+  // sensor.start_sensor();
   
-  for (int i = 0; i < 20; i++){
-    Serial.print("Interrupt Flag at start: ");
-    Serial.println(interruptFlag);
+  // for (int i = 0; i < 20; i++){
+  //   Serial.print("Interrupt Flag at start: ");
+  //   Serial.println(interruptFlag);
 
-    while (!interruptFlag){
-      delay(1);
-    }
+  //   while (!interruptFlag){
+  //     delay(1);
+  //   }
 
-    Serial.print("   Interrupt Flag Triggered: ");
-    Serial.println(interruptFlag);
+  //   Serial.print("   Interrupt Flag Triggered: ");
+  //   Serial.println(interruptFlag);
 
-    error = sensor.read_sensor(red, green, ir, ambient);
+  //   error = sensor.read_sensor(red, green, ir, ambient);
 
-    if (!error){
-      Serial.println("***** ERROR READING DATA ******");
-    }
-    else{
-      Serial.print(red);
-      Serial.print(", ");
-      Serial.print(green);
-      Serial.print(", ");
-      Serial.print(ir);
-      Serial.print(", ");
-      Serial.println(ambient);
-    }
-    // Clear the interrupt flag
-    interruptFlag = LOW;
-    // Clear the sensor interrupt
-    sensor.clear_interrupt(); // Note: This is needed. Sensor hangs up eventually
-  }
+  //   if (!error){
+  //     Serial.println("***** ERROR READING DATA ******");
+  //   }
+  //   else{
+  //     Serial.print(red);
+  //     Serial.print(", ");
+  //     Serial.print(green);
+  //     Serial.print(", ");
+  //     Serial.print(ir);
+  //     Serial.print(", ");
+  //     Serial.println(ambient);
+  //   }
+  //   // Clear the interrupt flag
+  //   interruptFlag = LOW;
+  //   // Clear the sensor interrupt
+  //   sensor.clear_interrupt(); // Note: This is needed. Sensor hangs up eventually
+  // }
 
 
 
@@ -409,12 +409,12 @@ void loop() {
 
   sensor.shutdown();
   sensor.set_data_rate(4);
-  sensor.clear_fifo();
+  // sensor.clear_fifo();
   sensor.clear_interrupt();
   interruptFlag = LOW;
 
-  delay(1000);
-  sensor.temp_ready_interrupt_enable(true);
+  delay(100);
+  sensor.temp_ready_interrupt_enable(false);
   sensor.data_ready_interrupt_enable(true);
 
   delay(100);
@@ -464,6 +464,6 @@ void loop() {
   Serial.println();
   Serial.println();
   Serial.println();
-  delay(5000);           // wait for next scan
+  delay(3000);           // wait for next scan
                 
 }
