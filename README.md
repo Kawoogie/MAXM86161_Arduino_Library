@@ -97,9 +97,13 @@ This code is tested on an Arduino Nano 33 BLE Sense Rev 2
   
 
 ### Installation
-This code can be imported to
-.
+This code can be downloaded to the local Arduino library folder. 
 
+If using Platform IO, it can be imported by adding  
+```
+lib_deps = https://github.com/Kawoogie/MAXM86161_Arduino_Library.git
+```
+to the platformio.ini file.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
