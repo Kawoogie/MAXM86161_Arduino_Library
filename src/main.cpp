@@ -96,14 +96,14 @@ void loop() {
 
   uint8_t fifo[1];
   // Read from register to check starting value
-  error = sensor.data_from_reg(0x09, *fifo);
+  // error = sensor.data_from_reg(0x09, *fifo);
 
-  if (!error){
-    Serial.println("Read Error!");
-  }
+  // if (!error){
+  //   Serial.println("Read Error!");
+  // }
 
-  Serial.print("Register Starting Value: ");
-  Serial.println(fifo[0]);
+  // Serial.print("Register Starting Value: ");
+  // Serial.println(fifo[0]);
 
   // Write to the sensor's register
   // error = sensor.write_to_reg(0x09, 100);
