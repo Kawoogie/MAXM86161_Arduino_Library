@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include "maxm86161.h"
-
-// #include <Wire.h>
+#include <Wire.h>
 
 // Declare the MAXM86161 sensor object  
 MAXM86161 sensor;
@@ -26,11 +25,13 @@ void setup() {
   pinMode(interruptPin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(interruptPin), interrupttrigger, FALLING);
 
+  // Initialize the I2C connection
+  Wire.begin();
+
   // Start Serial Communication
   Serial.begin(115200);
 
   while (!Serial); 
-
 }
 
 // the loop function runs over and over again forever
@@ -51,9 +52,8 @@ void loop() {
   Serial.println();
 
   delay(100);
-
-
   error = sensor.begin();
+  
     // Define the MAXM86161 device
   if (!error){
     Serial.println("Problem initializing device.");
@@ -61,7 +61,6 @@ void loop() {
   else {
     Serial.println("MAXM86161 initialized!");
   }
-
 
   // Set up sensor for taking data
   Serial.println("Setting up the sensor");

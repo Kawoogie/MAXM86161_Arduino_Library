@@ -43,7 +43,7 @@ bool MAXM86161::begin(TwoWire *wire, uint32_t i2cSpeed, uint8_t i2c_addr, uint32
     // Set the temperature reading calibration values
     _temp_cal_a = 1.0f;
     _temp_cal_b = 0.0f;
-    
+    bool error = false;
     // Check if a device is defined and remove it
     if (i2c_dev) {
         delete i2c_dev; // remove old interface
@@ -58,7 +58,7 @@ bool MAXM86161::begin(TwoWire *wire, uint32_t i2cSpeed, uint8_t i2c_addr, uint32
     }
 
     // Set the desired I2C speed
-    bool error = i2c_dev->setSpeed(i2cSpeed);
+    error = i2c_dev->setSpeed(i2cSpeed);
     if (!error){
         return false;
     }
