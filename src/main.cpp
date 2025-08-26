@@ -64,9 +64,9 @@ void loop() {
   // sensor.clear_interrupt();
   // interruptFlag = LOW;
 
-  delay(100);
-  sensor.temp_ready_interrupt_enable(false);
-  sensor.data_ready_interrupt_enable(true);
+  // delay(100);
+  // sensor.temp_ready_interrupt_enable(false);
+  // sensor.data_ready_interrupt_enable(true);
 
   delay(100);
   Serial.println("Red, Green, IR, Ambient, Temp");
