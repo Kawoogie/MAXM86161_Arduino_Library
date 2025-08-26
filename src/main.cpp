@@ -5,6 +5,8 @@
 // Declare the MAXM86161 sensor object  
 MAXM86161 sensor;
 
+#define i2c_address 92
+
 // Define the interrupt pin
 const byte interruptPin = D3;  // Interrupt Pin D3
 volatile byte interruptFlag = LOW;
@@ -52,7 +54,7 @@ void loop() {
   Serial.println();
 
   delay(100);
-  error = sensor.begin(2);
+  error = sensor.begin(2, 3);
   
     // Define the MAXM86161 device
   if (!error){
