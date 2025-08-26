@@ -78,15 +78,20 @@ void loop() {
     Serial.print("Flag: ");
     Serial.print(interruptFlag);
     bool interruptpinstate = digitalRead(interruptPin);
-    Serial.print("   Pin: ");
-    Serial.println(interruptpinstate);
+    Serial.print("   Pin Before: ");
+    Serial.print(interruptpinstate);
 
 
     while (!interruptFlag){
       delay(1);
     }
 
+    interruptpinstate = digitalRead(interruptPin);
+    Serial.print("   Pin After: ");
+    Serial.println(interruptpinstate);
+
     error = sensor.get_package_temp(temp);
+    
     if (!error){
       Serial.println("***** ERROR READING TEMP ******");
     }
