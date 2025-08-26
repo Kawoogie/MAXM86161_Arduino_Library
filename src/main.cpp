@@ -44,6 +44,9 @@ void setup() {
   Serial.print("Startup Status: ");
   Serial.println(start_error);
 
+  sensor.shutdown();
+  sensor.set_data_rate(4);
+
 }
 
 // the loop function runs over and over again forever
@@ -66,8 +69,6 @@ void loop() {
   Serial.println();
   Serial.println("Optical and Temp Reading Test");
 
-  sensor.shutdown();
-  sensor.set_data_rate(4);
   // sensor.clear_fifo();
   sensor.clear_interrupt();
   interruptFlag = LOW;
