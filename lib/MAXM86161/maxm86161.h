@@ -1,5 +1,7 @@
 /*
-
+    maxm86161.h - Library for driving the MAXM86161 optical sensor.
+    Created by Lee Sikstrom, 28 August 2025.
+    License: GPL-3.0
 */
 #ifndef maxm86161_h
 #define maxm86161_h
