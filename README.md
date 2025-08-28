@@ -94,7 +94,10 @@ To use this library, include the `maxm86161.h` and `maxm86161.cpp` files in your
 
 ### Prerequisites
 This code is tested on an Arduino Nano 33 BLE Sense Rev 2
-  
+
+This library is dependend on the following libraries:
+
+- [Adafruit BusIO](https://github.com/adafruit/Adafruit_BusIO)
 
 ### Installation
 This code can be downloaded to the local Arduino library folder. 
