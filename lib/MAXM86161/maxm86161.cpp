@@ -1,8 +1,7 @@
 /*
-    maxm86161.cpp - Library for running the MAXM86161 sensor from an Arduino.
-    Created by Lee Sikstrom 16 July 2025.
-    Updated by Lee Sikstrom 16 July 2025.
-    Released into the public domain.
+    maxm86161.h - Library for driving the MAXM86161 optical sensor.
+    Created by Lee Sikstrom, 28 August 2025.
+    License: GPL-3.0
 */
 
 #include "Arduino.h"
