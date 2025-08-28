@@ -5,4 +5,5 @@
 .vscode/ipch
 src/MAXM86161_Arduino_Library.code-workspace
 images
+images/logo.png
 platformio.ini
