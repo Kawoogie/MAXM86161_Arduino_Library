@@ -10,13 +10,14 @@ volatile byte interruptFlag = LOW;
 
 // Function for the interrupt to trigger the interruptFlag
 void interrupttoggle(){
-  interruptFlag = !interruptFlag;
+  interruptFlag = HIGH;
 }
 
 // the setup function runs once when you press reset or power the board
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
+
   // Turn on the LED while starting up
   digitalWrite(LED_BUILTIN, HIGH);
   
@@ -42,13 +43,16 @@ void setup() {
 
   // Set up the sensor parameters
   start_error = sensor.startup();
+
   // Set the data rate of the sensor
   sensor.set_data_rate(4);
+
   // Shut down the sensor and wait for the command to start reading data
   sensor.shutdown();
 
   // Disable interrupts from package temp ready
   sensor.temp_ready_interrupt_enable(false);
+  // sensor.data_ready_interrupt_enable(true);
 
   // Shut down the LED to indicate that the sensor is ready
   digitalWrite(LED_BUILTIN, LOW);
@@ -64,35 +68,20 @@ void loop() {
   int ambient = -99;
   float temp = -99;
 
-  // Troubleshoot hangup
-  sensor.clear_fifo();
-  sensor.clear_interrupt();
-  interruptFlag = LOW;
-
   delay(100);
+
+  // Print the data headers
   Serial.println("Red, Green, IR, Ambient, Temp");
+  
+  // Start optical sensing and package temperature
   sensor.start_sensor();
   sensor.start_temp_read();
+
   for (int i = 0; i < 200; i++) {
 
-    // Hangup troubleshooting
-    Serial.print("BEFORE Flag: ");
-    Serial.print(interruptFlag);
-    bool interruptpinstate = digitalRead(interruptPin);
-    Serial.print(" Pin: ");
-    Serial.print(interruptpinstate);
-
-
+    // Wait for an interrupt to signal data is ready
     while (!interruptFlag){
-      // delay(1);
     }
-
-    // Hangup troubleshooting
-    Serial.print(" |  AFTER: Flag: ");
-    Serial.print(interruptFlag);
-    interruptpinstate = digitalRead(interruptPin);
-    Serial.print(" Pin: ");
-    Serial.println(interruptpinstate);
 
     error = sensor.get_package_temp(temp);
     if (!error){
@@ -116,6 +105,7 @@ void loop() {
       Serial.println(temp);
     }
 
+    // Take a temperature reading every 20 optical measurements
     if (!(i % 20)){
       sensor.start_temp_read();
     }
